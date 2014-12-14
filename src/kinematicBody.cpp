@@ -2,5 +2,5 @@
 
 using namespace stl;
 
-KinematicBody() {};
-KinematicBody(vector<link>& links_, vector<joint>& joints_, Link& root_) {};
+KinematicBody::KinematicBody() {};
+KinematicBody::KinematicBody(const std::vector<Link>& links_, const std::vector<Joint>& joints_, const Link& root_) {};

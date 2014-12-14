@@ -2,5 +2,5 @@
 
 using namespace stl;
 
-Link() {}
-Link(const double length_, const Joint& joint_) {}
+Link::Link() {}
+Link::Link(const double length_, const Joint& joint_) {}

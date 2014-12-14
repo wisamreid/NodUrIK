@@ -18,8 +18,8 @@ namespace stl
     Link* child;
 
   public:
-    Joint() {};
-    Joint(const Eigen::Vector3d& anchor_, const Eigen::Vector3d& axis_, const Link child_) {};
+    Joint();
+    Joint(const Eigen::Vector3d& anchor_, const Eigen::Vector3d& axis_, const Link child_);
 
     inline void stream_to(std::ostream& os) const {os<< anchor <<", "<< axis << ", " << child;};
   };

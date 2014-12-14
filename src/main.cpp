@@ -54,7 +54,7 @@ using namespace stl;
 //****************************************************
 // Global Variables
 //****************************************************
-// Viewport  viewport;
+Viewport  viewport;
 // std::vector<std::vector<BezPatch> > bezObjs;
 // std::vector<ObjModel> objModels;
 // std::vector<std::vector<double> > obj_centers;
@@ -318,8 +318,8 @@ void myMouseMotion(int mouseX, int mouseY) {
 int main(int argc, char *argv[]) {
 
   //This parses the arguments and sets up the global variables
-  Parser argParser = Parser();
-  argParser.parse(&argc, argv);
+  // Parser argParser = Parser();
+  // argParser.parse(&argc, argv);
 
   //This initializes glut
   glutInit(&argc, argv);

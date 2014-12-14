@@ -3,4 +3,4 @@
 using namespace stl;
 
 Joint::Joint() {}
-Joint::Joint(Eigen::Vector3d& anchor_, Eigen::Vector3d& axis_, const Link child_) {}
+Joint::Joint(const Eigen::Vector3d& anchor_, const Eigen::Vector3d& axis_, const Link child_) {}

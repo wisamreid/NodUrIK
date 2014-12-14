@@ -16,8 +16,8 @@ namespace stl
     Joint* joint;
 
   public:
-    Link() {};
-    Link(const double length_, const Joint& joint_) {};
+    Link();
+    Link(const double length_, const Joint& joint_);
 
   };
 
