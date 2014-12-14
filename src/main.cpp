@@ -175,9 +175,9 @@ void initScene(){
 
 void myDisplay() {
 
-  // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                // clear the color buffer (sets everything to black), and the depth buffer.
-  //
-  // glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                // clear the color buffer (sets everything to black), and the depth buffer.
+
+  glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
   //
   // // Code to draw objects
   // if (shading==FLAT) glShadeModel(GL_FLAT);
@@ -203,9 +203,9 @@ void myDisplay() {
   //   glDisable(GL_POLYGON_OFFSET_FILL);
   // }
   //
-  // glutPostRedisplay();
-  // glFlush();
-  // glutSwapBuffers();					// swap buffers (we earlier set double buffer)
+  glutPostRedisplay();
+  glFlush();
+  glutSwapBuffers();					// swap buffers (we earlier set double buffer)
 }
 
 //****************************************************
