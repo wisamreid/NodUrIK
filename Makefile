@@ -16,7 +16,7 @@ endif
 #-g -Wall
 
 OUTPUT = as3
-SOURCES = src/main.cpp src/viewport.cpp src/parser.cpp src/point.cpp src/vertex.cpp src/bezpatch.cpp src/objmodel.cpp
+SOURCES = src/main.cpp src/viewport.cpp src/joint.cpp src/kinematicBody.cpp src/link.cpp
 #lodepng/lodepng.cpp
 #SOURCES = $(shell find . -name *.cpp)
 #SOURCES=$(wildcard src/*.cpp)
@@ -31,7 +31,7 @@ all: $(OUTPUT)
 # 	@mkdir -p bin/lodepng
 $(OUTPUT): $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $(OUTPUT) $(LDFLAGS)
-%.o: %.cpp
+%.o: %.cpps
 	$(CC) $(CFLAGS) -c $< -o $@
 clean:
 	$(RM) $(OUTPUT) out.png src/*.o lodepng/*.o

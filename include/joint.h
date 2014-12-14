@@ -15,7 +15,7 @@ namespace stl
     Link child;
   public:
     Joint() {};
-    Joint(const Vector& anchor_, const Vector& axis_, const child_) {};
+    Joint(const Vector& anchor_, const Vector& axis_, const Link child_) {};
 
     inline void stream_to(std::ostream& os) const {os<< anchor <<", "<< axis << ", " << child;};
   };

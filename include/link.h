@@ -14,8 +14,8 @@ namespace stl
     Joint joint;
 
   public:
-    Joint() {};
-    Joint(const double length_, const Joint& joint_) {};
+    Link() {};
+    Link(const double length_, const Joint& joint_) {};
 
     inline void stream_to(std::ostream& os) const {os<< length <<", "<< joint;};
   };

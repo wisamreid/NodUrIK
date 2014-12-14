@@ -19,7 +19,7 @@ namespace stl
     KinematicBody() {};
     KinematicBody(const vector<link>& links_, const vector<joint>& joints_, const Link& root_) {};
 
-    inline void stream_to(std::ostream& os) const {os<< anchor <<", "<< axis << ", " << child;};
+    inline void stream_to(std::ostream& os) const {os<< links <<", "<< joints << ", " << root;};
   };
 
   static inline std::ostream& operator << (std::ostream& os, const KinematicBody& k) {k.stream_to(os); return os;}
