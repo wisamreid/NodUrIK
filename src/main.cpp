@@ -42,7 +42,7 @@ using namespace stl;
 // Global Variables
 //****************************************************
 Viewport  viewport;
-// std::vector<KinematicBody> kinBodies;
+std::vector<KinematicBody*> kinBodies;
 
 
 //****************************************************
@@ -72,8 +72,10 @@ void initKinBodies() {
   Link* tip = new Link(1);
   links.push_back(tip);
 
-  KinematicBody linkNoJoint = KinematicBody(links,joints,tip);
+  KinematicBody* linkNoJoint = new KinematicBody(links,joints,tip);
 
+  // figure out
+  kinBodies.push_back(linkNoJoint);
 
   // 2 Links, 1 Joint Arm
   // vector<*Link> links;

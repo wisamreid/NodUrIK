@@ -10,7 +10,7 @@ else
 endif
 
 OUTPUT = final
-SOURCES = src/main.cpp src/viewport.cpp src/joint.cpp src/kinematicbody.cpp src/link.cpp
+SOURCES = src/main.cpp src/viewport.cpp src/joint.cpp src/kinematicBody.cpp src/link.cpp
 #SOURCES = $(shell find . -name *.cpp)
 #SOURCES=$(wildcard src/*.cpp)
 OBJECTS = $(SOURCES:%.cpp=%.o)
