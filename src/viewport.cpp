@@ -18,7 +18,7 @@ const int Viewport::getW() const {return w;}
 // void Viewport::setPixel(int x, int y, const Color& c) {
 //   glColor3f(c.getR(), c.getG(), c.getB());
 //   glVertex2f(x + 0.5, y + 0.5);   // The 0.5 is to target pixel
-//   // centers 
+//   // centers
 //   // Note: Need to check for gap
 //   // bug on inst machines.
 

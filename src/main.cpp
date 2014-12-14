@@ -13,22 +13,19 @@
 #ifdef OSX
 #include <GLUT/glut.h>
 #include <OpenGL/glu.h>
-cout << "WTF";
 #else
-// #include <GL/glut.h>
-// #include <GL/glu.h>
+#include <GL/glut.h>
+#include <GL/glu.h>
 #endif
 
 #include <time.h>
 #include <math.h>
 
 #include <vector>
-#include "../include/joint.h"
-cout << "WTF";
-#include "include/kinematicBody.h"
-#include "include/link.h"
-#include "include/viewport.h"
-cout << "WTF2";
+#include "joint.h"
+#include "kinematicBody.h"
+#include "link.h"
+#include "viewport.h"
 
 
 #define PI 3.14159265  // Should be used from mathlib

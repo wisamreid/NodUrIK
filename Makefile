@@ -31,7 +31,7 @@ all: $(OUTPUT)
 # 	@mkdir -p bin/lodepng
 $(OUTPUT): $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $(OUTPUT) $(LDFLAGS)
-%.o: %.cpps
+%.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 clean:
 	$(RM) $(OUTPUT) out.png src/*.o lodepng/*.o

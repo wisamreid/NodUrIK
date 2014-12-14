@@ -3,19 +3,23 @@
 
 #include <iostream>
 #include <Eigen/Core>
+#include "link.h"
 
 // stl :: string theory labs (taking over a universe near you)
 namespace stl
 {
 
+  class Link;
+
   class Joint {
   private:
-    Vector anchor;
-    Vector axis;
-    Link child;
+    Eigen::Vector3d anchor;
+    Eigen::Vector3d axis;
+    Link* child;
+
   public:
     Joint() {};
-    Joint(const Vector& anchor_, const Vector& axis_, const Link child_) {};
+    Joint(const Eigen::Vector3d& anchor_, const Eigen::Vector3d& axis_, const Link child_) {};
 
     inline void stream_to(std::ostream& os) const {os<< anchor <<", "<< axis << ", " << child;};
   };
