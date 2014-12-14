@@ -13,11 +13,12 @@ namespace stl
   class Link {
   private:
     double length;
-    Joint* joint;
+    Joint* childJoint;
 
   public:
-    Link();
-    Link(const double length_, const Joint& joint_);
+    Link(const double length_ = 1, Joint* child_ = NULL);
+
+    void draw();
 
   };
 

@@ -38,45 +38,11 @@
 
 using namespace stl;
 
-// enum Shading {
-//   FLAT,
-//   SMOOTH
-// };
-// Shading shading = SMOOTH;
-//
-// enum Mode {
-//   FILLED,
-//   WIREFRAME,
-//   HIDDEN
-// };
-// Mode mode = FILLED;
-
 //****************************************************
 // Global Variables
 //****************************************************
 Viewport  viewport;
-// std::vector<std::vector<BezPatch> > bezObjs;
-// std::vector<ObjModel> objModels;
-// std::vector<std::vector<double> > obj_centers;
-// std::vector<std::vector<double> > trans;
-// std::vector<std::vector<double> > rot;
-// int current_obj = 0;
-//
-// float curr_fill_amb[3] = {0.3f, 0.0f, 0.0f};
-// float curr_fill_diff[3] = {1.0f, 0.0f, 0.0f};
-// float curr_fill_spec[3] = {1.0f, 1.0f, 1.0f};
-//
-// float curr_wire_amb[3] = {1.0f, 0.0f, 0.0f};
-// float curr_wire_diff[3] = {0.5f, 0.0f, 0.0f};
-// float curr_wire_spec[3] = {0.0f, 0.0f, 0.0f};
-//
-// float fill_amb[3] = {0.0f, 0.3f, 0.3f};
-// float fill_diff[3] = {0.0f, 1.0f, 1.0f};
-// float fill_spec[3] = {1.0f, 1.0f, 1.0f};
-//
-// float wire_amb[3] = {0.0f, 1.0f, 1.0f};
-// float wire_diff[3] = {0.0f, 0.5f, 0.5f};
-// float wire_spec[3] = {0.0f, 0.0f, 0.0f};
+// std::vector<KinematicBody> kinBodies;
 
 
 //****************************************************
@@ -97,6 +63,33 @@ void myReshape(int w, int h) {
 //****************************************************
 // Simple init function
 //****************************************************
+
+void initKinBodies() {
+  // 1 Link, 0 Joint Arm
+  std::vector<Link*> links;
+  std::vector<Joint*> joints;
+
+  Link* tip = new Link(1);
+  links.push_back(tip);
+
+  KinematicBody linkNoJoint = KinematicBody(links,joints,tip);
+
+
+  // 2 Links, 1 Joint Arm
+  // vector<*Link> links;
+  // vector<*Joint> joints;
+
+  // Link* tip = new Link(1);
+  // links.push_back(tip);
+  // Joint* midTip = new Joint(tip, /*WISAM put type of joint here*/);
+  // joints.push_back(tip);
+  // Link* base = new Link(2,midTip);
+  // links.push_back(base);
+
+  // KinematicBody linkNoJoint = KinematicBody(links,joints,base);
+
+}
+
 void initScene(){
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

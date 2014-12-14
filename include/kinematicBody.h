@@ -12,13 +12,15 @@ namespace stl
   class KinematicBody {
 
   private:
-    std::vector<Link> links;
-    std::vector<Joint> joints;
-    Link root;
+    std::vector<Link*> links;
+    std::vector<Joint*> joints;
+    Link* rootLink;
 
   public:
     KinematicBody();
-    KinematicBody(const std::vector<Link>& links_, const std::vector<Joint>& joints_, const Link& root_);
+    KinematicBody(const std::vector<Link*>& links_, const std::vector<Joint*>& joints_, Link* root_);
+
+    void draw();
 
   };
 

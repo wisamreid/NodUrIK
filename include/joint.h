@@ -2,6 +2,7 @@
 #define JOINT_H
 
 #include <iostream>
+#include <vector>
 #include <Eigen/Core>
 #include "link.h"
 
@@ -9,22 +10,28 @@
 namespace stl
 {
 
+  enum JointType {
+    UNIVERSAL,
+    SOMETHING,
+    PISTON
+  };
+
   class Link;
 
   class Joint {
   private:
-    Eigen::Vector3d anchor;
-    Eigen::Vector3d axis;
-    Link* child;
+    Link* childLink;
+    Eigen::Vector3d anchor; // Relative to the tip of the parent link
+    std::vector<Eigen::Vector3d> axes; // Relative to the tip of the parent link
+    //double* thetas;
+    JointType type;
 
   public:
     Joint();
-    Joint(const Eigen::Vector3d& anchor_, const Eigen::Vector3d& axis_, const Link child_);
+    Joint(Link* child_, JointType type_);
 
-    inline void stream_to(std::ostream& os) const {os<< anchor <<", "<< axis << ", " << child;};
+    void draw();
   };
-
-  static inline std::ostream& operator << (std::ostream& os, const Joint& j) {j.stream_to(os); return os;}
 
 }
 
