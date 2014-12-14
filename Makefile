@@ -15,7 +15,7 @@ endif
 ##LDFLAGS =
 #-g -Wall
 
-OUTPUT = as3
+OUTPUT = final
 SOURCES = src/main.cpp src/viewport.cpp src/joint.cpp src/kinematicBody.cpp src/link.cpp
 #lodepng/lodepng.cpp
 #SOURCES = $(shell find . -name *.cpp)
