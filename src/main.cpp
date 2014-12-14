@@ -21,12 +21,12 @@
 #include <time.h>
 #include <math.h>
 
-#include <vector>
-#include "viewport.h"
-#include "parser.h"
-#include "bezpatch.h"
-#include "objmodel.h"
-#include "point.h"
+// #include <vector>
+// #include "viewport.h"
+// #include "parser.h"
+// #include "bezpatch.h"
+// #include "objmodel.h"
+// #include "point.h"
 
 #define PI 3.14159265  // Should be used from mathlib
 //#define SPACEBAR ' '
@@ -54,29 +54,29 @@ Mode mode = FILLED;
 //****************************************************
 // Global Variables
 //****************************************************
-Viewport  viewport;
-std::vector<std::vector<BezPatch> > bezObjs;
-std::vector<ObjModel> objModels;
-std::vector<std::vector<double> > obj_centers;
-std::vector<std::vector<double> > trans;
-std::vector<std::vector<double> > rot;
-int current_obj = 0;
-
-float curr_fill_amb[3] = {0.3f, 0.0f, 0.0f};
-float curr_fill_diff[3] = {1.0f, 0.0f, 0.0f};
-float curr_fill_spec[3] = {1.0f, 1.0f, 1.0f};
-
-float curr_wire_amb[3] = {1.0f, 0.0f, 0.0f};
-float curr_wire_diff[3] = {0.5f, 0.0f, 0.0f};
-float curr_wire_spec[3] = {0.0f, 0.0f, 0.0f};
-
-float fill_amb[3] = {0.0f, 0.3f, 0.3f};
-float fill_diff[3] = {0.0f, 1.0f, 1.0f};
-float fill_spec[3] = {1.0f, 1.0f, 1.0f};
-
-float wire_amb[3] = {0.0f, 1.0f, 1.0f};
-float wire_diff[3] = {0.0f, 0.5f, 0.5f};
-float wire_spec[3] = {0.0f, 0.0f, 0.0f};
+// Viewport  viewport;
+// std::vector<std::vector<BezPatch> > bezObjs;
+// std::vector<ObjModel> objModels;
+// std::vector<std::vector<double> > obj_centers;
+// std::vector<std::vector<double> > trans;
+// std::vector<std::vector<double> > rot;
+// int current_obj = 0;
+// 
+// float curr_fill_amb[3] = {0.3f, 0.0f, 0.0f};
+// float curr_fill_diff[3] = {1.0f, 0.0f, 0.0f};
+// float curr_fill_spec[3] = {1.0f, 1.0f, 1.0f};
+//
+// float curr_wire_amb[3] = {1.0f, 0.0f, 0.0f};
+// float curr_wire_diff[3] = {0.5f, 0.0f, 0.0f};
+// float curr_wire_spec[3] = {0.0f, 0.0f, 0.0f};
+//
+// float fill_amb[3] = {0.0f, 0.3f, 0.3f};
+// float fill_diff[3] = {0.0f, 1.0f, 1.0f};
+// float fill_spec[3] = {1.0f, 1.0f, 1.0f};
+//
+// float wire_amb[3] = {0.0f, 1.0f, 1.0f};
+// float wire_diff[3] = {0.0f, 0.5f, 0.5f};
+// float wire_spec[3] = {0.0f, 0.0f, 0.0f};
 
 
 //****************************************************
@@ -128,7 +128,7 @@ void initScene(){
 //***************************************************
 void setColor(int index) {
   if (index==current_obj) {
-    if (mode==FILLED) { 
+    if (mode==FILLED) {
       glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, curr_fill_amb);
       glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, curr_fill_diff);
       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, curr_fill_spec);
@@ -138,7 +138,7 @@ void setColor(int index) {
       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, curr_wire_spec);
     }
   } else {
-    if (mode==FILLED) { 
+    if (mode==FILLED) {
       glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, fill_amb);
       glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, fill_diff);
       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, fill_spec);
