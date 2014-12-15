@@ -77,6 +77,12 @@ void initKinBodies() {
   // figure out
   kinBodies.push_back(linkNoJoint);
 
+  std::vector<KinematicBody*>::iterator KBiter;
+
+  for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
+    (*KBiter)->draw();
+  }
+
   // 2 Links, 1 Joint Arm
   // vector<*Link> links;
   // vector<*Joint> joints;
@@ -99,6 +105,8 @@ void initScene(){
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+  initKinBodies();
 
 //   GLuint depthTexture;
 //   glGenTextures(1, &depthTexture);
