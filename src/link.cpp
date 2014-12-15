@@ -66,3 +66,9 @@ void Link::draw() {
       glEnd();
 
 }
+
+void Link::GetEndEffector(Transform3d& t, Eigen::Vector3d& currEndEffector) {
+  t = t * Eigen::Translation3d(0,0,length);
+  if (childJoint) childJoint->GetEndEffector(t,currEndEffector);
+  else currEndEffector = t.translation();
+}

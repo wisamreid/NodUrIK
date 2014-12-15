@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <Eigen/Core>
+#include <Eigen/Dense>
 #include "link.h"
 
 #ifdef _WIN32
@@ -26,6 +27,7 @@ namespace stl
 
   typedef Eigen::Matrix<double,1,Eigen::Dynamic> Dofs;
   typedef Eigen::Matrix<double,3,Eigen::Dynamic> Jacobian;
+  typedef Eigen::Transform<double,3,Eigen::Affine> Transform3d;
 
   enum JointType {
     BALL,         // 3 axes of rotation
@@ -43,14 +45,16 @@ namespace stl
     std::vector<Eigen::Vector3d> axes; // Relative to the tip of the parent link
     std::vector<double> thetas;
     JointType type;
+    double size;
 
   public:
-    Joint();
-    Joint(Link* child_, JointType type_, double theta1=0, double theta2=0, double theta3=0);
+    // Joint();
+    Joint(Link* child_, JointType type_, double theta1=0, double theta2=0, double theta3=0, double size=0.5);
 
     void draw();
     int GetNumDOFS();
     void SetDOFS(Dofs& dofs, int& startIndex);
+    void GetEndEffector(Transform3d& t, Eigen::Vector3d& currEndEffector);
   };
 
 }

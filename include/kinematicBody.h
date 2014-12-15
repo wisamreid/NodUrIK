@@ -21,6 +21,8 @@ namespace stl
     KinematicBody(const std::vector<Link*>& links_, const std::vector<Joint*>& joints_, Link* root_);
 
     void draw();
+    void GetEndEffector(Eigen::Vector3d& currEndEffector);
+    void SolveIK();
 
   };
 

@@ -22,6 +22,10 @@
 namespace stl
 {
 
+  typedef Eigen::Matrix<double,1,Eigen::Dynamic> Dofs;
+  typedef Eigen::Matrix<double,3,Eigen::Dynamic> Jacobian;
+  typedef Eigen::Transform<double,3,Eigen::Affine> Transform3d;
+
   class Joint;
 
   class Link {
@@ -33,6 +37,8 @@ namespace stl
     Link(const double length_ = 1, Joint* child_ = NULL);
 
     void draw();
+
+    void GetEndEffector(Transform3d& t, Eigen::Vector3d& currEndEffector);
 
   };
 

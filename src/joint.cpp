@@ -16,13 +16,13 @@
 
 using namespace stl;
 
-Joint::Joint() : childLink(NULL), type(HINGE) {
-  // Hinge Joint
-  axes.push_back(Eigen::Vector3d(1,0,0));
-  thetas.push_back(0.0);
-}
+// Joint::Joint() : childLink(NULL), type(HINGE) {
+//   // Hinge Joint
+//   axes.push_back(Eigen::Vector3d(1,0,0));
+//   thetas.push_back(0.0);
+// }
 
-Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double theta3) : childLink(child_), type(type_)  {
+Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double theta3, double size_) : childLink(child_), type(type_), size(size_)  {
   switch (type)
   {
     case HINGE:
@@ -135,4 +135,26 @@ void Joint::SetDOFS(Dofs& dofs, int& startIndex) {
       thetas[0] = dofs[startIndex++];
       break;
   }
+}
+
+void Joint::GetEndEffector(Transform3d& t, Eigen::Vector3d& currEndEffector) {
+  switch (type)
+  {
+    case HINGE:
+      t = t * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX());
+      t = t * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
+      break;
+    case UNIVERSAL:
+      t = t * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(thetas[1], Eigen::Vector3d::UnitY());
+      t = t * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
+      break;
+    case BALL:
+      t = t * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(thetas[1], Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(thetas[2], Eigen::Vector3d::UnitZ());
+      t = t * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
+      break;
+    case SLIDER:
+      t = t * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*thetas[0]);
+      break;
+  }
+  childLink->GetEndEffector(t,currEndEffector);
 }
