@@ -17,23 +17,52 @@ void Link::draw() {
 
       // glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
 
+      // glBegin(GL_TRIANGLES);
+      //
+      // glColor3f(1.0f, 0.0f, 0.0f); //FRONT
+      // glVertex3f(0.0f, 1.0f, 0.0f);
+      // glVertex3f(1.0f, -1.0f, 1.0f);
+      // glVertex3f(-1.0f, -1.0f, 1.0f);
+      //
+      // glColor3f(0.0f, 1.0f, 0.0f); //RIGHT
+      // glVertex3f(0.0f, 1.0f, 0.0f);
+      // glVertex3f(0.0f, -1.0f, -1.0f);
+      // glVertex3f(1.0f, -1.0f, 1.0f);
+      //
+      // glColor3f(0.0f, 0.0f, 1.0f); //LEFT
+      // glVertex3f(0.0f, 1.0f, 0.0f);
+      // glVertex3f(-1.0f, -1.0f, 1.0f);
+      // glVertex3f(0.0f, -1.0f, -1.0f);
+      //
+      // glEnd();
+
+      //TETAEDRON BY HAND
       glBegin(GL_TRIANGLES);
 
-      glColor3f(1.0f, 0.0f, 0.0f); //FRONT
-      glVertex3f(0.0f, 1.0f, 0.0f);
-      glVertex3f(1.0f, -1.0f, 1.0f);
-      glVertex3f(-1.0f, -1.0f, 1.0f);
+      //front triangle
+      glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+      glVertex3f(0.0f, 5.0f, 0.0f);
+      glVertex3f( -5.0f, -5.0f, 0.0f);
+      glVertex3f( 5.0f,  -5.0f, 0.0f);
 
-      glColor3f(0.0f, 1.0f, 0.0f); //RIGHT
-      glVertex3f(0.0f, 1.0f, 0.0f);
-      glVertex3f(0.0f, -1.0f, -1.0f);
-      glVertex3f(1.0f, -1.0f, 1.0f);
+      //right side triangle
+      glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+      glVertex3f( 5.0f,  -5.0f, 0.0f);
+      glVertex3f(0.0f, 5.0f, 0.0f);
+      glVertex3f( 0.0f,  -5.0f, -5.0f);
 
-      glColor3f(0.0f, 0.0f, 1.0f); //LEFT
-      glVertex3f(0.0f, 1.0f, 0.0f);
-      glVertex3f(-1.0f, -1.0f, 1.0f);
-      glVertex3f(0.0f, -1.0f, -1.0f);
+      //left side triangle
+      glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+      glVertex3f( -5.0f, -5.0f, 0.0f);
+      glVertex3f(0.0f, 5.0f, 0.0f);
+      glVertex3f( 0.0f,  -5.0f, -5.0f);
 
-      // glEnd();
+      //bottom triangle
+      glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+      glVertex3f( -5.0f, -5.0f, 0.0f);
+      glVertex3f( 5.0f,  -5.0f, 0.0f);
+      glVertex3f( 0.0f,  -5.0f, -5.0f);
+
+      glEnd();
 
 }
