@@ -29,6 +29,8 @@
 
 
 #define PI 3.14159265  // Should be used from mathlib
+inline float sqr(float x) { return x*x; }
+
 //#define SPACEBAR ' '
 #define SPACEBAR 32
 #define SHIFTKEY 31
@@ -56,7 +58,7 @@ void myReshape(int w, int h) {
   if (h == 0) { h=1;}
   float ratio = (float)w /(float)h;
   glLoadIdentity();
-  gluPerspective(45.0f, ratio, 0.1f, 200.0f);
+  // gluPerspective(45.0f, ratio, 0.1f, 200.0f);
 }
 
 
@@ -92,13 +94,22 @@ void initKinBodies() {
 
 void initScene(){
 
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glClearDepth(1.0f);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+  // establishProjectionMatrix(width, height);
+  // glShadeModel(GL_SMOOTH);
+  // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  // glEnable(GL_DEPTH_TEST);
+  // glDepthFunc(GL_LEQUAL);
+  // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+  // glEnable(GL_PERSPECTIVE_CORRECTION_HINT);
 
-  initKinBodies();
+
+  // glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  // // glClearDepth(1.0f);
+  // glEnable(GL_DEPTH_TEST);
+  // glDepthFunc(GL_LEQUAL);
+  // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+  // initKinBodies();
 
 //   GLuint depthTexture;
 //   glGenTextures(1, &depthTexture);
@@ -122,34 +133,34 @@ void initScene(){
 // functions that do the actual drawing of stuff
 //***************************************************
 // void setColor(int index) {
-//   if (index==current_obj) {
-//     if (mode==FILLED) {
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, curr_fill_amb);
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, curr_fill_diff);
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, curr_fill_spec);
-//     } else {
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, curr_wire_amb);
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, curr_wire_diff);
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, curr_wire_spec);
-//     }
-//   } else {
-//     if (mode==FILLED) {
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, fill_amb);
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, fill_diff);
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, fill_spec);
-//     } else {
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, wire_amb);
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, wire_diff);
-//       glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, wire_spec);
-//     }
-//   }
+  // if (index==current_obj) {
+  //   if (mode==FILLED) {
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, curr_fill_amb);
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, curr_fill_diff);
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, curr_fill_spec);
+  //   } else {
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, curr_wire_amb);
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, curr_wire_diff);
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, curr_wire_spec);
+  //   }
+  // } else {
+  //   if (mode==FILLED) {
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, fill_amb);
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, fill_diff);
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, fill_spec);
+  //   } else {
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, wire_amb);
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, wire_diff);
+  //     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, wire_spec);
+  //   }
+  // }
 // }
 //
 // void drawObjects() {
-//   int obj_index;
-//   for (int k=0; k<bezObjs.size(); k++){
-//     obj_index = bezObjs[k][0].getIndex();
-//     setColor(obj_index);
+//   // int obj_index;
+//   // for (int k=0; k<bezObjs.size(); k++){
+//   //   obj_index = bezObjs[k][0].getIndex();
+//   //   setColor(obj_index);
 //     glLoadIdentity(); // make sure transformation is "zero'd"
 //     glTranslatef(trans[obj_index][0], trans[obj_index][1], trans[obj_index][2]);
 //     glRotatef(rot[obj_index][0],1.0,0.0,0.0);
@@ -173,19 +184,72 @@ void initScene(){
 //   }
 // }
 
+//****************************************************
+// Draw a filled circle.
+//****************************************************
+//
+//
+// void circle(float centerX, float centerY, float radius) {
+//   // Draw inner circle
+//   glBegin(GL_POINTS);
+//
+//   // We could eliminate wasted work by only looping over the pixels
+//   // inside the sphere's radius.  But the example is more clear this
+//   // way.  In general drawing an object by loopig over the whole
+//   // screen is wasteful.
+//
+//   int i,j;  // Pixel indices
+//
+//   int minI = std::max(0,(int)floor(centerX-radius));
+//   int maxI = std::min(viewport.getW()-1,(int)std::ceil(centerX+radius));
+//
+//   int minJ = std::max(0,(int)floor(centerY-radius));
+//   int maxJ = std::min(viewport.getH()-1,(int)std::ceil(centerY+radius));
+//
+//
+//
+//   for (i=0;i<viewport.getW();i++) {
+//     for (j=0;j<viewport.getH();j++) {
+//
+//       // Location of the center of pixel relative to center of sphere
+//       float x = (i+0.5-centerX);
+//       float y = (j+0.5-centerY);
+//
+//       float dist = sqrt(sqr(x) + sqr(y));
+//
+//       if (dist<=radius) {
+//
+//         // This is the front-facing Z coordinate
+//         float z = sqrt(radius*radius-dist*dist);
+//
+//         // setPixel(i,j, 1.0, 0.0, 0.0);
+//         glColor3f(1.0, 0.0, 0.0);
+//         glVertex2f(i + 0.5, j + 0.5);
+//
+//         // This is amusing, but it assumes negative color values are treated reasonably.
+//         // setPixel(i,j, x/radius, y/radius, z/radius );
+//       }
+//
+//
+//     }
+//   }
+//   glEnd();
+//
+// }
+
 void myDisplay() {
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                // clear the color buffer (sets everything to black), and the depth buffer.
-
-  glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
+  // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                // clear the color buffer (sets everything to black), and the depth buffer.
   //
-  // // Code to draw objects
-
-  std::vector<KinematicBody*>::iterator KBiter;
-
-  for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
-    (*KBiter)->draw();
-  }
+  // glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
+  // //
+  // // // Code to draw objects
+  //
+  // std::vector<KinematicBody*>::iterator KBiter;
+  //
+  // for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
+  //   (*KBiter)->draw();
+  // }
 
   // if (shading==FLAT) glShadeModel(GL_FLAT);
   // else glShadeModel(GL_SMOOTH);
@@ -197,7 +261,7 @@ void myDisplay() {
   //   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   // }
   // drawObjects();
-  //
+
   // if (mode==HIDDEN) {
   //   // http://www.glprogramming.com/red/chapter14.html#name16
   //   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -209,15 +273,48 @@ void myDisplay() {
   //   glEnable(GL_LIGHTING);
   //   glDisable(GL_POLYGON_OFFSET_FILL);
   // }
+
+
+  // glClear(GL_COLOR_BUFFER_BIT);				// clear the color buffer
   //
+  // glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
+  // glLoadIdentity();				        // make sure transformation is "zero'd"
 
-  std::vector<KinematicBody*>::iterator KB_iter;
 
-  for(KB_iter=kinBodies.begin(); KB_iter != kinBodies.end(); KB_iter++) {
-    (*KB_iter)->draw();
-  }
+  // Start drawing
+  // circle(viewport.getW() / 2.0 , viewport.getH() / 2.0 , std::min(viewport.getW(), viewport.getH()) / 3.0);
 
-  glutPostRedisplay();
+  // //TETAEDRON BY HAND
+  // glBegin(GL_TRIANGLES);
+  //
+  // //front triangle
+  // glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+  // glVertex3f(0.0f, 5.0f, 0.0f);
+  // glVertex3f( -5.0f, -5.0f, 0.0f);
+  // glVertex3f( 5.0f,  -5.0f, 0.0f);
+  //
+  // //right side triangle
+  // glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+  // glVertex3f( 5.0f,  -5.0f, 0.0f);
+  // glVertex3f(0.0f, 5.0f, 0.0f);
+  // glVertex3f( 0.0f,  -5.0f, -5.0f);
+  //
+  // //left side triangle
+  // glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+  // glVertex3f( -5.0f, -5.0f, 0.0f);
+  // glVertex3f(0.0f, 5.0f, 0.0f);
+  // glVertex3f( 0.0f,  -5.0f, -5.0f);
+  //
+  // //bottom triangle
+  // glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+  // glVertex3f( -5.0f, -5.0f, 0.0f);
+  // glVertex3f( 5.0f,  -5.0f, 0.0f);
+  // glVertex3f( 0.0f,  -5.0f, -5.0f);
+  //
+  // glEnd();
+  // glPopMatrix();
+
+  // glutPostRedisplay();
   glFlush();
   glutSwapBuffers();					// swap buffers (we earlier set double buffer)
 }
@@ -334,9 +431,12 @@ int main(int argc, char *argv[]) {
   glutInit(&argc, argv);
 
   //This tells glut to use a double-buffered window with red, green, and blue channels, and a depth buffer.
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
+  // glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
   // Initalize theviewport
+
   viewport = Viewport(400,400);
 
   //The size and position of the window
@@ -346,13 +446,12 @@ int main(int argc, char *argv[]) {
 
   initScene();			// quick function to set up scene
 
-  glutKeyboardFunc(myKeyboard);           // function to run when its time to read keyboard input
-  glutSpecialFunc(myArrowKeys);           // function to run when arrow keys are pressed
-  glutMotionFunc(myMouseMotion);          // function to run when mouse input is received
-  glutMouseFunc(myMouse);                 // function to run when mouse input is received
+  // glutKeyboardFunc(myKeyboard);           // function to run when its time to read keyboard input
+  // glutSpecialFunc(myArrowKeys);           // function to run when arrow keys are pressed
+  // glutMotionFunc(myMouseMotion);          // function to run when mouse input is received
+  // glutMouseFunc(myMouse);                 // function to run when mouse input is received
   glutDisplayFunc(myDisplay);             // function to run when its time to draw something
   glutReshapeFunc(myReshape);             // function to run when the window gets resized
   glutMainLoop();                         // infinite loop that will keep drawing and resizing
-
   return 0;
 }
