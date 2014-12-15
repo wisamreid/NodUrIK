@@ -77,12 +77,6 @@ void initKinBodies() {
   // figure out
   kinBodies.push_back(linkNoJoint);
 
-  std::vector<KinematicBody*>::iterator KBiter;
-
-  for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
-    (*KBiter)->draw();
-  }
-
   // 2 Links, 1 Joint Arm
   // vector<*Link> links;
   // vector<*Joint> joints;
@@ -211,6 +205,13 @@ void myDisplay() {
   //   glDisable(GL_POLYGON_OFFSET_FILL);
   // }
   //
+
+  std::vector<KinematicBody*>::iterator KB_iter;
+
+  for(KB_iter=kinBodies.begin(); KB_iter != kinBodies.end(); KB_iter++) {
+    (*KB_iter)->draw();
+  }
+
   glutPostRedisplay();
   glFlush();
   glutSwapBuffers();					// swap buffers (we earlier set double buffer)
@@ -338,7 +339,7 @@ int main(int argc, char *argv[]) {
   glutInitWindowPosition(0,0);
   glutCreateWindow(argv[0]);
 
-  initScene();							// quick function to set up scene
+  initScene();			// quick function to set up scene
 
   glutKeyboardFunc(myKeyboard);           // function to run when its time to read keyboard input
   glutSpecialFunc(myArrowKeys);           // function to run when arrow keys are pressed
