@@ -24,10 +24,14 @@
 namespace stl
 {
 
+  typedef Eigen::Matrix<double,1,Eigen::Dynamic> Dofs;
+  typedef Eigen::Matrix<double,3,Eigen::Dynamic> Jacobian;
+
   enum JointType {
-    UNIVERSAL,
-    SOMETHING,
-    PISTON
+    BALL,         // 3 axes of rotation
+    UNIVERSAL,    // 2 axes of rotation
+    HINGE,        // 1 axis of rotation
+    SLIDER        // 0 axis of rotation, 1 axis of translation
   };
 
   class Link;
@@ -37,14 +41,16 @@ namespace stl
     Link* childLink;
     Eigen::Vector3d anchor; // Relative to the tip of the parent link
     std::vector<Eigen::Vector3d> axes; // Relative to the tip of the parent link
-    //double* thetas;
+    std::vector<double> thetas;
     JointType type;
 
   public:
     Joint();
-    Joint(Link* child_, JointType type_);
+    Joint(Link* child_, JointType type_, double theta1=0, double theta2=0, double theta3=0);
 
     void draw();
+    int GetNumDOFS();
+    void SetDOFS(Dofs& dofs, int& startIndex);
   };
 
 }
