@@ -16,35 +16,22 @@
 
 using namespace stl;
 
-// Joint::Joint() : childLink(NULL), type(HINGE) {
-//   // Hinge Joint
-//   axes.push_back(Eigen::Vector3d(1,0,0));
-//   thetas.push_back(0.0);
-// }
-
 Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double theta3, double size_) : childLink(child_), type(type_), size(size_)  {
   switch (type)
   {
     case HINGE:
-      axes.push_back(Eigen::Vector3d(1,0,0));
       thetas.push_back(theta1);
       break;
     case UNIVERSAL:
-      axes.push_back(Eigen::Vector3d(1,0,0));
-      axes.push_back(Eigen::Vector3d(0,1,0));
       thetas.push_back(theta1);
       thetas.push_back(theta2);
       break;
     case BALL:
-      axes.push_back(Eigen::Vector3d(1,0,0));
-      axes.push_back(Eigen::Vector3d(0,1,0));
-      axes.push_back(Eigen::Vector3d(0,0,1));
       thetas.push_back(theta1);
       thetas.push_back(theta2);
       thetas.push_back(theta3);
       break;
     case SLIDER:
-      axes.push_back(Eigen::Vector3d(0,0,1));
       thetas.push_back(theta1);
       break;
   }

@@ -42,14 +42,12 @@ namespace stl
   private:
     Link* childLink;
     Eigen::Vector3d anchor; // Relative to the tip of the parent link
-    std::vector<Eigen::Vector3d> axes; // Relative to the tip of the parent link
     std::vector<double> thetas;
     JointType type;
     double size;
     Transform3d globalTransform;
 
   public:
-    // Joint();
     Joint(Link* child_, JointType type_, double theta1=0, double theta2=0, double theta3=0, double size=0.5);
 
     void draw();
