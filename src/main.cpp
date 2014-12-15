@@ -78,9 +78,9 @@ void initKinBodies() {
   // 2 Links, 1 Joint Arm
   Link* tip = new Link();
   links.push_back(tip);
-  Joint* joint1 = new Joint(tip, UNIVERSAL);
+  Joint* joint1 = new Joint(tip, HINGE);
   joints.push_back(joint1);
-  Link* base = new Link(2, 2, joint1);
+  Link* base = new Link(2, 1, joint1);
   links.push_back(base);
 
   KinematicBody* linksAndJoint = new KinematicBody(links,joints,base,tip);
@@ -179,42 +179,20 @@ void myDisplay() {
 
   glLoadIdentity();                            // make sure transformation is "zero'd"
 
-  glTranslatef(0, 0, -15);
+  glTranslatef(0, 0, -10);
 
+  //Rotation are for testing only
   glRotatef(45,1,0,0);
   glRotatef(45,0,1,0);
+  glRotatef(120,0,0,1);
 
-  // // Code to draw objects
-
+  // Code to draw objects
   std::vector<KinematicBody*>::iterator KBiter;
 
   for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
     (*KBiter)->draw();
   }
 
-  // if (shading==FLAT) glShadeModel(GL_FLAT);
-  // else glShadeModel(GL_SMOOTH);
-  //
-  // if (mode==FILLED) {
-  //   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  // }
-  // else {
-  //   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  // }
-  // drawObjects();
-  //
-  // if (mode==HIDDEN) {
-  //   // http://www.glprogramming.com/red/chapter14.html#name16
-  //   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  //   glEnable(GL_POLYGON_OFFSET_FILL);
-  //   glPolygonOffset(1.0, 1.0);
-  //   glColor3f(0.0f, 0.0f, 0.0f); // Background color
-  //   glDisable(GL_LIGHTING);
-  //   drawObjects();
-  //   glEnable(GL_LIGHTING);
-  //   glDisable(GL_POLYGON_OFFSET_FILL);
-  // }
-  //
   glutPostRedisplay();
   glFlush();
   glutSwapBuffers();					// swap buffers (we earlier set double buffer)

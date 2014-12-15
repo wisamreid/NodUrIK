@@ -36,7 +36,7 @@ namespace stl
     Transform3d globalTransform;
 
   public:
-    Link(const double width = 0.5, const double length_ = 4.0, Joint* child_ = NULL);
+    Link(const double length_ = 4.0, const double width_ = 0.5, Joint* child_ = NULL);
 
     void draw();
     void UpdateTransform(Transform3d& currGlobalTransform);

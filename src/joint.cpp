@@ -38,16 +38,15 @@ Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double
 }
 
 void Joint::draw() {
-  //Assume that some parent link updated the OpenGL matrix stack. Under that assumption, draw this joint.
-
-  //Based on the thetas, rotate around the axes of rotions and update hte OpenGL transform stack based on the new rotation.
   switch (type)
   {
     case HINGE: {
-      // Draw Hinge Here (Cylinder)
-      // glutSolidCylinder(size, size, 20, 20);
+      glRotatef(90,0,1,0);
+      glTranslatef(0,0,-size/2);
       GLUquadricObj *hinge = gluNewQuadric();
       gluCylinder(hinge, size, size, size, 30, 30);
+      glTranslatef(0,0,size/2);
+      glRotatef(-90,0,1,0);
     }
       break;
     case UNIVERSAL: {
@@ -66,7 +65,9 @@ void Joint::draw() {
       break;
   }
 
-  if (childLink) childLink->draw();
+  if (childLink) {
+    childLink->draw();
+  }
 
 }
 

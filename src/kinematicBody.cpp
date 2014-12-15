@@ -2,7 +2,7 @@
 
 using namespace stl;
 
-KinematicBody::KinematicBody(const std::vector<Link*>& links_, const std::vector<Joint*>& joints_, Link* tip_, Link* root_) : links(links_), joints(joints_), tipLink(tip_), rootLink(root_), numDOFS(0) {
+KinematicBody::KinematicBody(const std::vector<Link*>& links_, const std::vector<Joint*>& joints_, Link* root_, Link* tip_) : links(links_), joints(joints_), tipLink(tip_), rootLink(root_), numDOFS(0) {
   for (int i=0; i<joints.size(); i++){
     numDOFS+=joints[i]->GetNumDOFS();
   }
