@@ -56,46 +56,31 @@ void Joint::draw() {
   //Based on the thetas, rotate around the axes of rotions and update hte OpenGL transform stack based on the new rotation.
   switch (type)
   {
-    case HINGE:
+    case HINGE: {
       // Draw Hinge Here (Cylinder)
+      // glutSolidCylinder(size, size, 20, 20);
+      GLUquadricObj *hinge = gluNewQuadric();
+      gluCylinder(hinge, size, size, size, 30, 30);
+    }
       break;
-    case UNIVERSAL:
+    case UNIVERSAL: {
       // Draw Universal Here (Sphere)
+      glutSolidSphere(size, 20, 20);
+    }
       break;
-    case BALL:
+    case BALL: {
       // Draw Ball Here (Sphere)
+      glutSolidSphere(size, 20, 20);
+    }
       break;
-    case SLIDER:
+    case SLIDER: {
       // Draw Slider Here (Cylinder)
+    }
       break;
   }
 
   if (childLink) childLink->draw();
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
-
-    glBegin(GL_TRIANGLES);
-
-    glColor3f(1.0f, 0.0f, 0.0f); //FRONT
-    glVertex3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(1.0f, -1.0f, 1.0f);
-    glVertex3f(-1.0f, -1.0f, 1.0f);
-
-    glColor3f(0.0f, 1.0f, 0.0f); //RIGHT
-    glVertex3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(0.0f, -1.0f, -1.0f);
-    glVertex3f(1.0f, -1.0f, 1.0f);
-
-    glColor3f(0.0f, 0.0f, 1.0f); //LEFT
-    glVertex3f(0.0f, 1.0f, 0.0f);
-    glVertex3f(-1.0f, -1.0f, 1.0f);
-    glVertex3f(0.0f, -1.0f, -1.0f);
-
-    glEnd();
 }
 
 void Joint::UpdateTransform(Transform3d& currGlobalTransform) {

@@ -81,12 +81,20 @@ void initKinBodies() {
 
   // Link* tip = new Link(1);
   // links.push_back(tip);
-  // Joint* midTip = new Joint(tip, /*WISAM put type of joint here*/);
-  // joints.push_back(tip);
-  // Link* base = new Link(2,midTip);
-  // links.push_back(base);
+  //
+  // KinematicBody* linkNoJoint = new KinematicBody(links,joints,tip);
+  // kinBodies.push_back(linkNoJoint);
 
-  // KinematicBody linkNoJoint = KinematicBody(links,joints,base);
+  // 2 Links, 1 Joint Arm
+  Link* tip = new Link(1);
+  links.push_back(tip);
+  Joint* joint1 = new Joint(tip, UNIVERSAL);
+  joints.push_back(joint1);
+  Link* base = new Link(2,joint1);
+  links.push_back(base);
+
+  KinematicBody* linksAndJoint = new KinematicBody(links,joints,base);
+  kinBodies.push_back(linksAndJoint);
 
 }
 
@@ -178,10 +186,10 @@ void myDisplay() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                // clear the color buffer (sets everything to black), and the depth buffer.
 
   glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
-  
+
   glLoadIdentity();                            // make sure transformation is "zero'd"
 
-  glTranslatef(0, 0, -3);
+  glTranslatef(0, 0, -15);
 
   // // Code to draw objects
 
