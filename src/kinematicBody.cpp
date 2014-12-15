@@ -17,9 +17,7 @@ void KinematicBody::GetEndEffector(Eigen::Vector3d& currEndEffector) {
 }
 
 void KinematicBody::SolveIK(Eigen::Vector3d& target) {
-
-
-  // Eigen::Matrix<3,numDOFS> J;
+  Jacobian J = Jacobian(3,numDOFS);
   // /*
   // computeJacobian(J, target);
 
