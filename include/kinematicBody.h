@@ -16,13 +16,14 @@ namespace stl
     std::vector<Joint*> joints;
     Link* tipLink;
     Link* rootLink;
+    int numDOFS;
 
   public:
     KinematicBody(const std::vector<Link*>& links_, const std::vector<Joint*>& joints_, Link* tip_, Link* root_);
 
     void draw();
     void GetEndEffector(Eigen::Vector3d& currEndEffector);
-    void SolveIK();
+    void SolveIK(Eigen::Vector3d& target);
 
   };
 
