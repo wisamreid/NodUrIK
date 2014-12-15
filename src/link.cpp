@@ -17,58 +17,32 @@ void Link::draw() {
 
       // glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
 
-      // glBegin(GL_TRIANGLES);
-      //
-      // glColor3f(1.0f, 0.0f, 0.0f); //FRONT
-      // glVertex3f(0.0f, 1.0f, 0.0f);
-      // glVertex3f(1.0f, -1.0f, 1.0f);
-      // glVertex3f(-1.0f, -1.0f, 1.0f);
-      //
-      // glColor3f(0.0f, 1.0f, 0.0f); //RIGHT
-      // glVertex3f(0.0f, 1.0f, 0.0f);
-      // glVertex3f(0.0f, -1.0f, -1.0f);
-      // glVertex3f(1.0f, -1.0f, 1.0f);
-      //
-      // glColor3f(0.0f, 0.0f, 1.0f); //LEFT
-      // glVertex3f(0.0f, 1.0f, 0.0f);
-      // glVertex3f(-1.0f, -1.0f, 1.0f);
-      // glVertex3f(0.0f, -1.0f, -1.0f);
-      //
-      // glEnd();
-
-      //TETAEDRON BY HAND
       glBegin(GL_TRIANGLES);
-
-      //front triangle
-      glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-      glVertex3f(0.0f, 5.0f, 0.0f);
-      glVertex3f( -5.0f, -5.0f, 0.0f);
-      glVertex3f( 5.0f,  -5.0f, 0.0f);
-
-      //right side triangle
-      glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-      glVertex3f( 5.0f,  -5.0f, 0.0f);
-      glVertex3f(0.0f, 5.0f, 0.0f);
-      glVertex3f( 0.0f,  -5.0f, -5.0f);
-
-      //left side triangle
-      glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-      glVertex3f( -5.0f, -5.0f, 0.0f);
-      glVertex3f(0.0f, 5.0f, 0.0f);
-      glVertex3f( 0.0f,  -5.0f, -5.0f);
-
-      //bottom triangle
-      glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-      glVertex3f( -5.0f, -5.0f, 0.0f);
-      glVertex3f( 5.0f,  -5.0f, 0.0f);
-      glVertex3f( 0.0f,  -5.0f, -5.0f);
-
+      
+      glColor3f(1.0f, 0.0f, 0.0f); //FRONT
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      glVertex3f(1.0f, -1.0f, 1.0f);
+      glVertex3f(-1.0f, -1.0f, 1.0f);
+      
+      glColor3f(0.0f, 0.0f, 1.0f); //LEFT
+      glVertex3f(0.0f, 1.0f, 0.0f);
+      glVertex3f(-1.0f, -1.0f, 1.0f);
+      glVertex3f(0.0f, -1.0f, -1.0f);
+      
       glEnd();
+
+
 
 }
 
-void Link::GetEndEffector(Transform3d& t, Eigen::Vector3d& currEndEffector) {
-  t = t * Eigen::Translation3d(0,0,length);
-  if (childJoint) childJoint->GetEndEffector(t,currEndEffector);
-  else currEndEffector = t.translation();
+void Link::GetEndEffector(Eigen::Vector3d& currEndEffector) {
+  currEndEffector = (globalTransform * Eigen::Translation3d(0,0,length)).translation();
+}
+
+void Link::UpdateTransform(Transform3d& currGlobalTransform) {
+  globalTransform = currGlobalTransform;
+  if (childJoint) {
+    Transform3d tempTransform = globalTransform * Eigen::Translation3d(0,0,length);
+    childJoint->UpdateTransform(tempTransform);
+  }
 }

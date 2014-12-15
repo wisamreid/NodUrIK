@@ -32,13 +32,14 @@ namespace stl
   private:
     double length;
     Joint* childJoint;
+    Transform3d globalTransform;
 
   public:
     Link(const double length_ = 1, Joint* child_ = NULL);
 
     void draw();
-
-    void GetEndEffector(Transform3d& t, Eigen::Vector3d& currEndEffector);
+    void UpdateTransform(Transform3d& currGlobalTransform);
+    void GetEndEffector(Eigen::Vector3d& currEndEffector);
 
   };
 

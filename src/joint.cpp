@@ -98,6 +98,32 @@ void Joint::draw() {
     glEnd();
 }
 
+void Joint::UpdateTransform(Transform3d& currGlobalTransform) {
+  globalTransform = currGlobalTransform;
+  if (childLink) {
+    Transform3d tempTransform;
+    switch (type)
+    {
+      case HINGE:
+        tempTransform = globalTransform * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX());
+        tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
+        break;
+      case UNIVERSAL:
+        tempTransform = globalTransform * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(thetas[1], Eigen::Vector3d::UnitY());
+        tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
+        break;
+      case BALL:
+        tempTransform = globalTransform * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(thetas[1], Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(thetas[2], Eigen::Vector3d::UnitZ());
+        tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
+        break;
+      case SLIDER:
+        tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*thetas[0]);
+        break;
+    }
+    childLink->UpdateTransform(tempTransform);
+  }
+}
+
 int Joint::GetNumDOFS() {
   switch (type)
   {
@@ -135,26 +161,4 @@ void Joint::SetDOFS(Dofs& dofs, int& startIndex) {
       thetas[0] = dofs[startIndex++];
       break;
   }
-}
-
-void Joint::GetEndEffector(Transform3d& t, Eigen::Vector3d& currEndEffector) {
-  switch (type)
-  {
-    case HINGE:
-      t = t * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX());
-      t = t * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
-      break;
-    case UNIVERSAL:
-      t = t * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(thetas[1], Eigen::Vector3d::UnitY());
-      t = t * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
-      break;
-    case BALL:
-      t = t * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(thetas[1], Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(thetas[2], Eigen::Vector3d::UnitZ());
-      t = t * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
-      break;
-    case SLIDER:
-      t = t * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*thetas[0]);
-      break;
-  }
-  childLink->GetEndEffector(t,currEndEffector);
 }

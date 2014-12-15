@@ -72,7 +72,7 @@ void initKinBodies() {
   Link* tip = new Link(1);
   links.push_back(tip);
 
-  KinematicBody* linkNoJoint = new KinematicBody(links,joints,tip);
+  KinematicBody* linkNoJoint = new KinematicBody(links,joints,tip,tip);
   kinBodies.push_back(linkNoJoint);
 
   // 2 Links, 1 Joint Arm
@@ -104,17 +104,17 @@ void initScene(){
 //   glGenTextures(1, &depthTexture);
 //   glBindTexture(GL_TEXTURE_2D, depthTexture);
 
-  // GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-  // GLfloat mat_shininess[] = { 50.0 };
-  // GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
-  // glClearColor (0.0, 0.0, 0.0, 0.0);
-  //
-  // glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-  // glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-  // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-  //
-  // glEnable(GL_LIGHTING);
-  // glEnable(GL_LIGHT0);
+  GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+  GLfloat mat_shininess[] = { 50.0 };
+  GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
+  glClearColor (0.0, 0.0, 0.0, 0.0);
+  
+  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+  glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+  glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+  
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
 
 }
 

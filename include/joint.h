@@ -46,15 +46,16 @@ namespace stl
     std::vector<double> thetas;
     JointType type;
     double size;
+    Transform3d globalTransform;
 
   public:
     // Joint();
     Joint(Link* child_, JointType type_, double theta1=0, double theta2=0, double theta3=0, double size=0.5);
 
     void draw();
+    void UpdateTransform(Transform3d& currGlobalTransform);
     int GetNumDOFS();
     void SetDOFS(Dofs& dofs, int& startIndex);
-    void GetEndEffector(Transform3d& t, Eigen::Vector3d& currEndEffector);
   };
 
 }
