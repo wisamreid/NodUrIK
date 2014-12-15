@@ -76,11 +76,11 @@ void initKinBodies() {
   // kinBodies.push_back(linkNoJoint);
 
   // 2 Links, 1 Joint Arm
-  Link* tip = new Link(1);
+  Link* tip = new Link();
   links.push_back(tip);
   Joint* joint1 = new Joint(tip, UNIVERSAL);
   joints.push_back(joint1);
-  Link* base = new Link(2,joint1);
+  Link* base = new Link(2, 2, joint1);
   links.push_back(base);
 
   KinematicBody* linksAndJoint = new KinematicBody(links,joints,base,tip);
@@ -106,11 +106,11 @@ void initScene(){
   GLfloat mat_shininess[] = { 50.0 };
   GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
   glClearColor (0.0, 0.0, 0.0, 0.0);
-  
+
   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
   glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-  
+
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
@@ -180,6 +180,9 @@ void myDisplay() {
   glLoadIdentity();                            // make sure transformation is "zero'd"
 
   glTranslatef(0, 0, -15);
+
+  glRotatef(45,1,0,0);
+  glRotatef(45,0,1,0);
 
   // // Code to draw objects
 

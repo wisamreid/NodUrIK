@@ -31,11 +31,12 @@ namespace stl
   class Link {
   private:
     double length;
+    double width;
     Joint* childJoint;
     Transform3d globalTransform;
 
   public:
-    Link(const double length_ = 1, Joint* child_ = NULL);
+    Link(const double width = 0.5, const double length_ = 4.0, Joint* child_ = NULL);
 
     void draw();
     void UpdateTransform(Transform3d& currGlobalTransform);
