@@ -178,7 +178,11 @@ void myDisplay() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                // clear the color buffer (sets everything to black), and the depth buffer.
 
   glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
-  //
+  
+  glLoadIdentity();                            // make sure transformation is "zero'd"
+
+  glTranslatef(0, 0, -3);
+
   // // Code to draw objects
 
   std::vector<KinematicBody*>::iterator KBiter;
