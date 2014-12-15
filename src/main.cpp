@@ -65,24 +65,14 @@ void myReshape(int w, int h) {
 //****************************************************
 
 void initKinBodies() {
-  // 1 Link, 0 Joint Arm
   std::vector<Link*> links;
   std::vector<Joint*> joints;
 
-  Link* tip = new Link(1);
-  links.push_back(tip);
-
-  KinematicBody* linkNoJoint = new KinematicBody(links,joints,tip,tip);
-  kinBodies.push_back(linkNoJoint);
-
-  // 2 Links, 1 Joint Arm
-  // vector<*Link> links;
-  // vector<*Joint> joints;
-
+  // 1 Link, 0 Joint Arm
   // Link* tip = new Link(1);
   // links.push_back(tip);
-  //
-  // KinematicBody* linkNoJoint = new KinematicBody(links,joints,tip);
+
+  // KinematicBody* linkNoJoint = new KinematicBody(links,joints,tip,tip);
   // kinBodies.push_back(linkNoJoint);
 
   // 2 Links, 1 Joint Arm
@@ -93,7 +83,7 @@ void initKinBodies() {
   Link* base = new Link(2,joint1);
   links.push_back(base);
 
-  KinematicBody* linksAndJoint = new KinematicBody(links,joints,base);
+  KinematicBody* linksAndJoint = new KinematicBody(links,joints,base,tip);
   kinBodies.push_back(linksAndJoint);
 
 }
