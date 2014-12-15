@@ -73,15 +73,7 @@ void initKinBodies() {
   links.push_back(tip);
 
   KinematicBody* linkNoJoint = new KinematicBody(links,joints,tip);
-
-  // figure out
   kinBodies.push_back(linkNoJoint);
-
-  std::vector<KinematicBody*>::iterator KBiter;
-
-  for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
-    (*KBiter)->draw();
-  }
 
   // 2 Links, 1 Joint Arm
   // vector<*Link> links;
@@ -188,6 +180,13 @@ void myDisplay() {
   glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
   //
   // // Code to draw objects
+
+  std::vector<KinematicBody*>::iterator KBiter;
+
+  for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
+    (*KBiter)->draw();
+  }
+
   // if (shading==FLAT) glShadeModel(GL_FLAT);
   // else glShadeModel(GL_SMOOTH);
   //

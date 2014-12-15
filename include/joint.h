@@ -24,8 +24,8 @@
 namespace stl
 {
 
-  typedef Eigen::Matrix<double,1,Dynamic> Dofs;
-  typedef Eigen::Matrix<double,3,Dynamic> Jacobian;
+  typedef Eigen::Matrix<double,1,Eigen::Dynamic> Dofs;
+  typedef Eigen::Matrix<double,3,Eigen::Dynamic> Jacobian;
 
   enum JointType {
     BALL,         // 3 axes of rotation
@@ -46,7 +46,7 @@ namespace stl
 
   public:
     Joint();
-    Joint(Link* child_, JointType type_);
+    Joint(Link* child_, JointType type_, double theta1=0, double theta2=0, double theta3=0);
 
     void draw();
     int GetNumDOFS();

@@ -22,7 +22,7 @@ Joint::Joint() : childLink(NULL), type(HINGE) {
   thetas.push_back(0.0);
 }
 
-Joint::Joint(Link* child_, JointType type_, double theta1=0, double theta2=0, double theta3=0) : childLink(child_), type(type_)  {
+Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double theta3) : childLink(child_), type(type_)  {
   switch (type)
   {
     case HINGE:
@@ -97,9 +97,8 @@ void Joint::draw() {
 
     glEnd();
 }
-}
 
-int GetNumDOFS() {
+int Joint::GetNumDOFS() {
   switch (type)
   {
     case HINGE:
