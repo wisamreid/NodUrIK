@@ -24,6 +24,8 @@ namespace stl
     void draw();
     void GetEndEffector(Eigen::Vector3d& currEndEffector);
     void SolveIK(Eigen::Vector3d& target);
+    void GetDOFS(Dofs& dofs);
+    void SetDOFS(Dofs& dofs);
 
   };
 
