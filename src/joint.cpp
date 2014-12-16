@@ -14,6 +14,8 @@
 #include <GL/glu.h>
 #endif
 
+#include <math.h>
+
 using namespace stl;
 
 Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double theta3, double size_) : childLink(child_), type(type_), size(size_)  {
@@ -47,16 +49,26 @@ void Joint::draw() {
       gluCylinder(hinge, size, size, size, 30, 30);
       glTranslatef(0,0,size/2);
       glRotatef(-90,0,1,0);
+
+      // Update for childLink
+      glRotatef(thetas[0]/M_PI*180,1,0,0);
     }
       break;
     case UNIVERSAL: {
-      // Draw Universal Here (Sphere)
       glutSolidSphere(size, 20, 20);
+
+      // Update for childLink
+      glRotatef(thetas[0]/M_PI*180,1,0,0);
+      glRotatef(thetas[1]/M_PI*180,0,1,0);
     }
       break;
     case BALL: {
-      // Draw Ball Here (Sphere)
       glutSolidSphere(size, 20, 20);
+
+      // Update for childLink
+      glRotatef(thetas[0]/M_PI*180,1,0,0);
+      glRotatef(thetas[1]/M_PI*180,0,1,0);
+      glRotatef(thetas[2]/M_PI*180,0,0,1);
     }
       break;
     case SLIDER: {
@@ -79,18 +91,15 @@ void Joint::UpdateTransform(Transform3d& currGlobalTransform) {
     {
       case HINGE:
         tempTransform = globalTransform * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX());
-        tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
         break;
       case UNIVERSAL:
         tempTransform = globalTransform * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(thetas[1], Eigen::Vector3d::UnitY());
-        tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
         break;
       case BALL:
         tempTransform = globalTransform * Eigen::AngleAxisd(thetas[0], Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(thetas[1], Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(thetas[2], Eigen::Vector3d::UnitZ());
-        tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*size);
         break;
       case SLIDER:
-        tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*thetas[0]);
+        // tempTransform = globalTransform * Eigen::Translation3d(Eigen::Vector3d::UnitZ()*thetas[0]);
         break;
     }
     childLink->UpdateTransform(tempTransform);
@@ -115,23 +124,76 @@ int Joint::GetNumDOFS() {
   }
 }
 
-void Joint::SetDOFS(Dofs& dofs, int& startIndex) {
+void Joint::GetDOFS(Dofs& dofs, int& currIndex) {
   switch (type)
   {
     case HINGE:
-      thetas[0] = dofs[startIndex++];
+      dofs[currIndex++] = thetas[0];
       break;
     case UNIVERSAL:
-      thetas[0] = dofs[startIndex++];
-      thetas[1] = dofs[startIndex++];
+      dofs[currIndex++] = thetas[0];
+      dofs[currIndex++] = thetas[1];
       break;
     case BALL:
-      thetas[0] = dofs[startIndex++];
-      thetas[1] = dofs[startIndex++];
-      thetas[2] = dofs[startIndex++];
+      dofs[currIndex++] = thetas[0];
+      dofs[currIndex++] = thetas[1];
+      dofs[currIndex++] = thetas[2];
       break;
     case SLIDER:
-      thetas[0] = dofs[startIndex++];
+      dofs[currIndex++] = thetas[0];
       break;
+  }
+}
+
+void Joint::SetDOFS(Dofs& dofs, int& currIndex) {
+  switch (type)
+  {
+    case HINGE:
+      thetas[0] = dofs[currIndex++];
+      break;
+    case UNIVERSAL:
+      thetas[0] = dofs[currIndex++];
+      thetas[1] = dofs[currIndex++];
+      break;
+    case BALL:
+      thetas[0] = dofs[currIndex++];
+      thetas[1] = dofs[currIndex++];
+      thetas[2] = dofs[currIndex++];
+      break;
+    case SLIDER:
+      thetas[0] = dofs[currIndex++];
+      break;
+  }
+}
+
+void Joint::computeJacobian(Jacobian& J, int& currCol, Eigen::Vector3d& endEffector) {
+  Eigen::Vector3d partialJac;
+  Eigen::Vector3d dir = endEffector-(globalTransform*anchor);
+  switch (type)
+  {
+    case SLIDER:
+      // Add Slider Jacobian here!
+      break;
+    default:
+      for(int i=0; i<GetNumDOFS(); i++) {
+        Eigen::Vector3d axis;
+        switch (i)
+        {
+          case 0:
+            axis = globalTransform.linear()*Eigen::Vector3d::UnitX();
+            break;
+          case 1:
+            axis = globalTransform.linear()*Eigen::Vector3d::UnitY();
+            break;
+          case 2:
+            axis = globalTransform.linear()*Eigen::Vector3d::UnitZ();
+            break;
+        }
+        partialJac = axis.cross(dir);
+        J(0,currCol) = partialJac[0];
+        J(1,currCol) = partialJac[1];
+        J(2,currCol) = partialJac[2];
+        currCol++;
+      }
   }
 }

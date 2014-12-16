@@ -5,7 +5,7 @@ using namespace stl;
 Link::Link(const double length_, const double width_, Joint* child_) : length(length_), width(width_), childJoint(child_) {}
 
 void Link::draw() {
-  glutSolidCone(width, length, 20, 20);
+  glutSolidCone(width, length, 30, 30);
   if (childJoint) {
     glTranslatef(0,0,length);
     childJoint->draw();

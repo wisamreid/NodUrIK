@@ -25,8 +25,8 @@
 namespace stl
 {
 
-  typedef Eigen::Matrix<double,1,Eigen::Dynamic> Dofs;
-  typedef Eigen::Matrix<double,3,Eigen::Dynamic> Jacobian;
+  typedef Eigen::Matrix<double,Eigen::Dynamic,1> Dofs;
+  typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> Jacobian;
   typedef Eigen::Transform<double,3,Eigen::Affine> Transform3d;
 
   enum JointType {
@@ -53,7 +53,9 @@ namespace stl
     void draw();
     void UpdateTransform(Transform3d& currGlobalTransform);
     int GetNumDOFS();
-    void SetDOFS(Dofs& dofs, int& startIndex);
+    void GetDOFS(Dofs& dofs, int& currIndex);
+    void SetDOFS(Dofs& dofs, int& currIndex);
+    void computeJacobian(Jacobian& m, int& currCol, Eigen::Vector3d& endEffector);
   };
 
 }

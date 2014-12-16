@@ -22,8 +22,8 @@
 namespace stl
 {
 
-  typedef Eigen::Matrix<double,1,Eigen::Dynamic> Dofs;
-  typedef Eigen::Matrix<double,3,Eigen::Dynamic> Jacobian;
+  typedef Eigen::Matrix<double,Eigen::Dynamic,1> Dofs;
+  typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> Jacobian;
   typedef Eigen::Transform<double,3,Eigen::Affine> Transform3d;
 
   class Joint;
