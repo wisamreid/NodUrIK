@@ -44,6 +44,103 @@ using namespace stl;
 Viewport  viewport;
 std::vector<KinematicBody*> kinBodies;
 
+enum Frame {
+  GLOBAL = 0,
+  PATH,
+  NUM_FRAMES
+};
+
+Frame currFrame = GLOBAL;
+bool playAnimation = true;
+
+Eigen::Vector3d trans[NUM_FRAMES] = {Eigen::Vector3d(0,0,-20),Eigen::Vector3d(-3,0,6)};
+Eigen::Vector3d rot[NUM_FRAMES] = {Eigen::Vector3d(0,0,0),Eigen::Vector3d(0,0,0)};
+
+std::vector<Eigen::Vector3d> pointPath;
+int currPathPoint = 0;
+Transform3d currPathTransform;
+
+void bezCurveInterp(std::vector<Eigen::Vector3d>& curve, double u, Eigen::Vector3d& result){
+  Eigen::Vector3d A, B, C, D, E;
+
+  // split each of the three segments
+  // to form two new ones AB and BC
+  A = curve[0] * (1.0-u) + curve[1] * u;
+  B = curve[1] * (1.0-u) + curve[2] * u;
+  C = curve[2] * (1.0-u) + curve[3] * u;
+
+  // split AB and BC to form a new segment DE
+  D = A * (1.0-u) + B * u;
+  E = B * (1.0-u) + C * u;
+
+  // this is the point on the curve
+  result = D * (1.0-u) + E * u;
+};
+
+void updatePathTransform() {
+  // Apply path transform
+  glLoadIdentity(); 
+  glTranslatef(trans[PATH][0], trans[PATH][1], trans[PATH][2]);
+  glRotatef(rot[PATH][0],1.0,0.0,0.0);
+  glRotatef(rot[PATH][1],0.0,1.0,0.0);
+  glRotatef(rot[PATH][2],0.0,0.0,1.0);
+
+  GLfloat matrix[16]; 
+  glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
+  Eigen::Matrix4d temp;
+  temp << matrix[0], matrix[4], matrix[8],  matrix[12],
+          matrix[1], matrix[5], matrix[9],  matrix[13],
+          matrix[2], matrix[6], matrix[10], matrix[14],
+          matrix[3], matrix[7], matrix[11], matrix[15];
+  currPathTransform = temp;
+}
+
+void initPath(){
+  std::vector< std::vector<Eigen::Vector3d> > bezPath;
+  std::vector<Eigen::Vector3d> bezCurve;
+
+  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezCurve.push_back(Eigen::Vector3d(0,4,0));
+  bezCurve.push_back(Eigen::Vector3d(6,4,0));
+  bezCurve.push_back(Eigen::Vector3d(6,0,0));
+  bezPath.push_back(bezCurve);
+  bezCurve.clear();
+
+  bezCurve.push_back(Eigen::Vector3d(6,0,0));
+  bezCurve.push_back(Eigen::Vector3d(6,-4,0));
+  bezCurve.push_back(Eigen::Vector3d(0,-4,0));
+  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezPath.push_back(bezCurve);
+  bezCurve.clear();
+
+  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezCurve.push_back(Eigen::Vector3d(0,4,0));
+  bezCurve.push_back(Eigen::Vector3d(-6,4,0));
+  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
+  bezPath.push_back(bezCurve);
+  bezCurve.clear();
+
+  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
+  bezCurve.push_back(Eigen::Vector3d(-6,-4,0));
+  bezCurve.push_back(Eigen::Vector3d(0,-4,0));
+  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezPath.push_back(bezCurve);
+  bezCurve.clear();
+
+  double param = 0.01;
+  int num_steps = (int)(1/param)+1;
+  Eigen::Vector3d point;
+
+  for (int j=0; j<bezPath.size(); j++){
+    for (int u = 0; u*param < 1; u++) {
+      bezCurveInterp(bezPath[j],u*param, point);
+      pointPath.push_back(point);
+    }
+  }
+
+  updatePathTransform();
+
+}
 
 //****************************************************
 // reshape viewport if the window is resized
@@ -76,15 +173,49 @@ void initKinBodies() {
   // kinBodies.push_back(linkNoJoint);
 
   // 2 Links, 1 Joint Arm
-  Link* tip = new Link();
+  // Link* tip = new Link();
+  // links.push_back(tip);
+  // Joint* joint1 = new Joint(tip, UNIVERSAL);
+  // joints.push_back(joint1);
+  // Link* base = new Link(3, 0.5, joint1);
+  // links.push_back(base);
+
+  // KinematicBody* linksAndJoint = new KinematicBody(links,joints,base,tip);
+  // kinBodies.push_back(linksAndJoint);
+
+  // 3 Links, 2 Joint Arm
+  // Link* tip = new Link(2,0.5);
+  // links.push_back(tip);
+  // Joint* joint1 = new Joint(tip, HINGE);
+  // joints.push_back(joint1);
+  // Link* mid = new Link(2,0.5,joint1);
+  // links.push_back(mid);
+  // Joint* joint2 = new Joint(mid, HINGE);
+  // joints.push_back(joint2);
+  // Link* base = new Link(3, 0.5, joint2);
+  // links.push_back(base);
+
+  // KinematicBody* linksAndJoints = new KinematicBody(links,joints,base,tip);
+  // kinBodies.push_back(linksAndJoints);
+
+  // 4 Links, 3 Joint Arm
+  Link* tip = new Link(2,0.5);
   links.push_back(tip);
-  Joint* joint1 = new Joint(tip, HINGE);
+  Joint* joint1 = new Joint(tip, BALL);
   joints.push_back(joint1);
-  Link* base = new Link(2, 1, joint1);
+  Link* midTip = new Link(2,0.5,joint1);
+  links.push_back(midTip);
+  Joint* joint2 = new Joint(midTip, BALL);
+  joints.push_back(joint2);
+  Link* baseMid = new Link(3, 0.5, joint2);
+  links.push_back(baseMid);
+  Joint* joint3 = new Joint(baseMid, BALL);
+  joints.push_back(joint3);
+  Link* base = new Link(3, 0.5, joint3);
   links.push_back(base);
 
-  KinematicBody* linksAndJoint = new KinematicBody(links,joints,base,tip);
-  kinBodies.push_back(linksAndJoint);
+  KinematicBody* linksAndJoints = new KinematicBody(links,joints,base,tip);
+  kinBodies.push_back(linksAndJoints);
 
 }
 
@@ -97,6 +228,7 @@ void initScene(){
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
   initKinBodies();
+  initPath();
 
 //   GLuint depthTexture;
 //   glGenTextures(1, &depthTexture);
@@ -118,7 +250,7 @@ void initScene(){
 
 //****************************************************
 // functions that do the actual drawing of stuff
-//***************************************************
+//****************************************************
 // void setColor(int index) {
 //   if (index==current_obj) {
 //     if (mode==FILLED) {
@@ -142,34 +274,51 @@ void initScene(){
 //     }
 //   }
 // }
-//
-// void drawObjects() {
-//   int obj_index;
-//   for (int k=0; k<bezObjs.size(); k++){
-//     obj_index = bezObjs[k][0].getIndex();
-//     setColor(obj_index);
-//     glLoadIdentity(); // make sure transformation is "zero'd"
-//     glTranslatef(trans[obj_index][0], trans[obj_index][1], trans[obj_index][2]);
-//     glRotatef(rot[obj_index][0],1.0,0.0,0.0);
-//     glRotatef(rot[obj_index][1],0.0,1.0,0.0);
-//     glRotatef(rot[obj_index][2],0.0,0.0,1.0);
-//     glTranslatef(-obj_centers[obj_index][0], -obj_centers[obj_index][1], -obj_centers[obj_index][2]);
-//     for (int i=0; i<bezObjs[k].size(); i++) {
-//       bezObjs[k][i].draw();
-//     }
-//   }
-//   for (int k=0; k<objModels.size(); k++) {
-//     obj_index = objModels[k].getIndex();
-//     setColor(obj_index);
-//     glLoadIdentity(); // make sure transformation is "zero'd"
-//     glTranslatef(trans[obj_index][0], trans[obj_index][1], trans[obj_index][2]);
-//     glRotatef(rot[obj_index][0],1.0,0.0,0.0);
-//     glRotatef(rot[obj_index][1],0.0,1.0,0.0);
-//     glRotatef(rot[obj_index][2],0.0,0.0,1.0);
-//     glTranslatef(-obj_centers[obj_index][0], -obj_centers[obj_index][1], -obj_centers[obj_index][2]);
-//     objModels[k].draw();
-//   }
-// }
+
+void drawPath() {
+  // Apply path transform
+  glTranslatef(trans[PATH][0], trans[PATH][1], trans[PATH][2]);
+  glRotatef(rot[PATH][0],1.0,0.0,0.0);
+  glRotatef(rot[PATH][1],0.0,1.0,0.0);
+  glRotatef(rot[PATH][2],0.0,0.0,1.0);
+
+  double param = 0.01;
+  int num_steps = (int)(1/param)+1;
+  Eigen::Vector3d point;
+
+  glLineWidth(4);
+
+  // Draw whole path
+  glBegin(GL_LINE_STRIP);
+    for (int i=0; i<pointPath.size(); i++) {
+      glVertex3f(pointPath[i][0],pointPath[i][1],pointPath[i][2]);
+    }
+  glEnd();
+
+  // Undo path transform
+  glRotatef(-rot[PATH][2],0.0,0.0,1.0);
+  glRotatef(-rot[PATH][1],0.0,1.0,0.0);
+  glRotatef(-rot[PATH][0],1.0,0.0,0.0);
+  glTranslatef(-trans[PATH][0], -trans[PATH][1], -trans[PATH][2]);
+}
+
+void drawKinBodies() {
+  std::vector<KinematicBody*>::iterator KBiter;
+
+  Eigen::Vector3d target = currPathTransform*pointPath[currPathPoint];
+
+  // Draw target
+  glTranslatef(target[0], target[1], target[2]);
+  glutSolidSphere(0.2, 30, 30);
+  glTranslatef(-target[0], -target[1], -target[2]);
+
+  // Draw bodies
+  for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
+    (*KBiter)->SolveIK(target);
+    (*KBiter)->draw();
+  }
+
+}
 
 void myDisplay() {
 
@@ -179,20 +328,17 @@ void myDisplay() {
 
   glLoadIdentity();                            // make sure transformation is "zero'd"
 
-  glTranslatef(0, 0, -10);
-
-  //Rotation are for testing only
-  glRotatef(45,1,0,0);
-  glRotatef(45,0,1,0);
-  glRotatef(120,0,0,1);
+  // Apply global transform
+  glTranslatef(trans[GLOBAL][0], trans[GLOBAL][1], trans[GLOBAL][2]);
+  glRotatef(rot[GLOBAL][0],1.0,0.0,0.0);
+  glRotatef(rot[GLOBAL][1],0.0,1.0,0.0);
+  glRotatef(rot[GLOBAL][2],0.0,0.0,1.0);
 
   // Code to draw objects
-  std::vector<KinematicBody*>::iterator KBiter;
+  drawPath();
+  drawKinBodies();
 
-  for(KBiter=kinBodies.begin(); KBiter != kinBodies.end(); KBiter++) {
-    (*KBiter)->draw();
-  }
-
+  // Other glut calls
   glutPostRedisplay();
   glFlush();
   glutSwapBuffers();					// swap buffers (we earlier set double buffer)
@@ -200,11 +346,11 @@ void myDisplay() {
 
 //****************************************************
 // function to process keyboard input
-//***************************************************
+//****************************************************
 void myKeyboard(unsigned char key, int x, int y) {
-  // if (key == 'q') {
-  //   exit(0);
-  // }
+  if (key == 'q') {
+    exit(0);
+  }
   // if (key == 's') {
   //   //toggle between flat and smooth shading
   //   if (shading==SMOOTH) shading=FLAT;
@@ -220,61 +366,65 @@ void myKeyboard(unsigned char key, int x, int y) {
   //   if (mode!=HIDDEN) mode=HIDDEN;
   //   else mode=WIREFRAME;
   // }
-  // if (key == '+') {
-  //   trans[current_obj][2]+=0.1;
-  // }
-  // if (key == '-') {
-  //   trans[current_obj][2]-=0.1;
-  // }
-  // if (key == SPACEBAR) {
-  //   current_obj = (current_obj+1)%(bezObjs.size()+objModels.size());
-  // }
-  //
-  // glutPostRedisplay();
+  if (key == 'p') {
+    //toggle between play and pause
+    playAnimation = !playAnimation;
+  }
+  if (key == '+') {
+    trans[currFrame][2]+=0.1;
+  }
+  if (key == '-') {
+    trans[currFrame][2]-=0.1;
+  }
+  if (key == SPACEBAR) {
+    currFrame = (Frame)((currFrame+1)%NUM_FRAMES);
+  }
+  updatePathTransform();
+  glutPostRedisplay();
 }
 
 void myArrowKeys(int key, int x, int y) {
-  // int modifier = glutGetModifiers();
-  // if (modifier&GLUT_ACTIVE_SHIFT != 0) {
-  //   //Translate
-  //   switch(key) {
-  //     case GLUT_KEY_UP:
-  //       trans[current_obj][1]+=0.1;
-  //       break;
-  //     case GLUT_KEY_DOWN:
-  //       trans[current_obj][1]-=0.1;
-  //       break;
-  //     case GLUT_KEY_LEFT:
-  //       trans[current_obj][0]-=0.1;
-  //       break;
-  //     case GLUT_KEY_RIGHT:
-  //       trans[current_obj][0]+=0.1;
-  //       break;
-  //   }
-  // } else {
-  //   //Rotate
-  //   switch(key) {
-  //     case GLUT_KEY_UP:
-  //       rot[current_obj][0]+=2;
-  //       break;
-  //     case GLUT_KEY_DOWN:
-  //       rot[current_obj][0]-=2;
-  //       break;
-  //     case GLUT_KEY_LEFT:
-  //       rot[current_obj][1]-=2;
-  //       break;
-  //     case GLUT_KEY_RIGHT:
-  //       rot[current_obj][1]+=2;
-  //       break;
-  //   }
-  // }
-  //
-  // glutPostRedisplay();
+  int modifier = glutGetModifiers();
+  if (modifier&GLUT_ACTIVE_SHIFT != 0) {
+    //Translate
+    switch(key) {
+      case GLUT_KEY_UP:
+        trans[currFrame][1]+=0.1;
+        break;
+      case GLUT_KEY_DOWN:
+        trans[currFrame][1]-=0.1;
+        break;
+      case GLUT_KEY_LEFT:
+        trans[currFrame][0]-=0.1;
+        break;
+      case GLUT_KEY_RIGHT:
+        trans[currFrame][0]+=0.1;
+        break;
+    }
+  } else {
+    //Rotate
+    switch(key) {
+      case GLUT_KEY_UP:
+        rot[currFrame][0]+=2;
+        break;
+      case GLUT_KEY_DOWN:
+        rot[currFrame][0]-=2;
+        break;
+      case GLUT_KEY_LEFT:
+        rot[currFrame][1]-=2;
+        break;
+      case GLUT_KEY_RIGHT:
+        rot[currFrame][1]+=2;
+        break;
+    }
+  }
+  updatePathTransform();
+  glutPostRedisplay();
 }
 
 //****************************************************
 // function to process mouse input
-//***************************************************
+//****************************************************
 void myMouse(int button, int state, int x, int y) {
   //Do something later.
   //Possible button inputs: GLUT_LEFT_BUTTON, GLUT_RIGHT_BUTTON, or GLUT_MIDDLE_BUTTON
@@ -295,6 +445,18 @@ void myMouseMotion(int mouseX, int mouseY) {
   // }
 
   // glutPostRedisplay();
+}
+
+
+//****************************************************
+// function to create animation
+//****************************************************
+void myTimer(int value){
+    if (playAnimation) {
+      currPathPoint = (currPathPoint+1)%pointPath.size();
+      glutPostRedisplay();
+    }
+    glutTimerFunc(25,myTimer,0); // Call myTimer every 25 milliseconds
 }
 
 //****************************************************
@@ -328,6 +490,7 @@ int main(int argc, char *argv[]) {
   glutMouseFunc(myMouse);                 // function to run when mouse input is received
   glutDisplayFunc(myDisplay);             // function to run when its time to draw something
   glutReshapeFunc(myReshape);             // function to run when the window gets resized
+  glutTimerFunc(25,myTimer,0);            // function to start the animation loop
   glutMainLoop();                         // infinite loop that will keep drawing and resizing
 
   return 0;
