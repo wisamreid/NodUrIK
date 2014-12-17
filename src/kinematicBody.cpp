@@ -2,9 +2,9 @@
 
 using namespace stl;
 
-#define MAX_ITERATIONS 100
+#define MAX_ITERATIONS 10
 #define EPSILON 1e-3
-#define LAMBDA 100
+#define LAMBDA 200
 
 KinematicBody::KinematicBody(const std::vector<Link*>& links_, const std::vector<Joint*>& joints_, Link* root_, Link* tip_) : links(links_), joints(joints_), tipLink(tip_), rootLink(root_), numDOFS(0) {
   for (int i=0; i<joints.size(); i++){
@@ -27,7 +27,7 @@ void KinematicBody::SolveIK(Eigen::Vector3d& target) {
   Jacobian J(3,numDOFS);
   Eigen::Vector3d endEffector;
   Eigen::Vector3d targetDir;
-  Dofs deltaDofs(numDOFS);
+  Dofs deltaDofs = Dofs::Zero(numDOFS);
   Dofs currDofs(numDOFS);
 
   size_t count = 0;
@@ -44,13 +44,28 @@ void KinematicBody::SolveIK(Eigen::Vector3d& target) {
       joints[j]->computeJacobian(J, colIndex, endEffector);
     }
 
-    deltaDofs = (J.transpose()*(J*J.transpose()+LAMBDA*Eigen::MatrixXd::Identity(J.rows(),J.rows())).inverse())*targetDir;
     // Replace NaN with 0.0
-    for (int i=0; i<numDOFS; i++) {
-      if (deltaDofs[i] != deltaDofs[i]) {
-        deltaDofs[i] = 0.0;
-      }
-    }
+    // for (int j=0; j<3; j++) {
+    //   for (int i=0; i<numDOFS; i++) {
+    //     if (J(j,i) != J(j,i)) {
+    //       std::cout<<"GOT NAN IN JACOBIAN"<<std::endl;
+    //       std::cout<<J<<std::endl<<std::endl;
+    //       J(j,i) = 0.0;
+    //     }
+    //   }
+    // }
+
+    // deltaDofs = (J.transpose()*(J*J.transpose()+LAMBDA*Eigen::MatrixXd::Identity(J.rows(),J.rows())).inverse())*targetDir;
+    deltaDofs = (J.transpose()*J + LAMBDA*Eigen::MatrixXd::Identity(J.cols(),J.cols())).inverse()*(J.transpose()*targetDir + LAMBDA*deltaDofs);
+
+
+    // for (int i=0; i<numDOFS; i++) {
+    //   if (deltaDofs[i] != deltaDofs[i]) {
+    //     std::cout<<"GOT NAN IN DELTADOFS"<<std::endl;
+    //     std::cout<<deltaDofs<<std::endl<<std::endl;
+    //     deltaDofs[i] = 0.0;
+    //   }
+    // }
 
     // std::cout<<"END:"<<endEffector<<std::endl<<std::endl;
     // std::cout<<"NORM:"<<deltaDofs.norm()<<std::endl;
