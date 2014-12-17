@@ -18,6 +18,21 @@
 
 using namespace stl;
 
+#define HINGE_UPPER M_PI/2
+#define HINGE_LOWER -M_PI/2
+#define UNIV1_UPPER M_PI/2
+#define UNIV1_LOWER -M_PI/2
+#define UNIV2_UPPER M_PI/2
+#define UNIV2_LOWER -M_PI/2
+#define BALL1_UPPER M_PI/2
+#define BALL1_LOWER -M_PI/2
+#define BALL2_UPPER M_PI/2
+#define BALL2_LOWER -M_PI/2
+#define BALL3_UPPER M_PI // z-axis rotation
+#define BALL3_LOWER -M_PI // x-axis rotation
+#define SLIDR_UPPER 1.0
+#define SLIDR_LOWER 0.0
+
 Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double theta3, double size_) : childLink(child_), type(type_), size(size_)  {
   switch (type)
   {
@@ -55,7 +70,7 @@ void Joint::draw() {
     }
       break;
     case UNIVERSAL: {
-      glutSolidSphere(size, 20, 20);
+      glutSolidSphere(size, 30, 30);
 
       // Update for childLink
       glRotatef(thetas[0]/M_PI*180,1,0,0);
@@ -63,7 +78,7 @@ void Joint::draw() {
     }
       break;
     case BALL: {
-      glutSolidSphere(size, 20, 20);
+      glutSolidSphere(size, 30, 30);
 
       // Update for childLink
       glRotatef(thetas[0]/M_PI*180,1,0,0);
@@ -146,22 +161,68 @@ void Joint::GetDOFS(Dofs& dofs, int& currIndex) {
 }
 
 void Joint::SetDOFS(Dofs& dofs, int& currIndex) {
+  double currTheta;
   switch (type)
   {
     case HINGE:
-      thetas[0] = dofs[currIndex++];
+      currTheta = dofs[currIndex++];
+      if (currTheta > HINGE_UPPER) {
+        currTheta = HINGE_UPPER;
+      } else if (currTheta < HINGE_LOWER) {
+        currTheta = HINGE_LOWER;
+      }
+      thetas[0] = currTheta;
       break;
     case UNIVERSAL:
-      thetas[0] = dofs[currIndex++];
-      thetas[1] = dofs[currIndex++];
+      currTheta = dofs[currIndex++];
+      if (currTheta > UNIV1_UPPER) {
+        currTheta = UNIV1_UPPER;
+      } else if (currTheta < UNIV1_LOWER) {
+        currTheta = UNIV1_LOWER;
+      }
+      thetas[0] = currTheta;
+
+      currTheta = dofs[currIndex++];
+      if (currTheta > UNIV2_UPPER) {
+        currTheta = UNIV2_UPPER;
+      } else if (currTheta < UNIV2_LOWER) {
+        currTheta = UNIV2_LOWER;
+      }
+      thetas[1] = currTheta;
       break;
     case BALL:
-      thetas[0] = dofs[currIndex++];
-      thetas[1] = dofs[currIndex++];
-      thetas[2] = dofs[currIndex++];
+      currTheta = dofs[currIndex++];
+      if (currTheta > BALL1_UPPER) {
+        currTheta = BALL1_UPPER;
+      } else if (currTheta < BALL1_LOWER) {
+        currTheta = BALL1_LOWER;
+      }
+      thetas[0] = currTheta;
+
+      currTheta = dofs[currIndex++];
+      if (currTheta > BALL2_UPPER) {
+        currTheta = BALL2_UPPER;
+      } else if (currTheta < BALL2_LOWER) {
+        currTheta = BALL2_LOWER;
+      }
+      thetas[1] = currTheta;
+
+      currTheta = dofs[currIndex++];
+      if (currTheta > BALL3_UPPER) {
+        currTheta = BALL3_UPPER;
+      } else if (currTheta < BALL3_LOWER) {
+        currTheta = BALL3_LOWER;
+      }
+      thetas[2] = currTheta;
       break;
     case SLIDER:
-      thetas[0] = dofs[currIndex++];
+      currTheta = dofs[currIndex++];
+      if (currTheta > SLIDR_UPPER) {
+        currTheta = SLIDR_UPPER;
+      } else if (currTheta < SLIDR_LOWER) {
+        currTheta = SLIDR_LOWER;
+      }
+      thetas[0] = currTheta;
       break;
   }
 }
