@@ -107,31 +107,31 @@ void initPath(){
   std::vector< std::vector<Eigen::Vector3d> > bezPath;
   std::vector<Eigen::Vector3d> bezCurve;
 
-  bezCurve.push_back(Eigen::Vector3d(0,0,0));
   bezCurve.push_back(Eigen::Vector3d(0,4,0));
-  bezCurve.push_back(Eigen::Vector3d(6,4,0));
+  bezCurve.push_back(Eigen::Vector3d(0,4,-4));
+  bezCurve.push_back(Eigen::Vector3d(6,0,4));
   bezCurve.push_back(Eigen::Vector3d(6,0,0));
   bezPath.push_back(bezCurve);
   bezCurve.clear();
 
   bezCurve.push_back(Eigen::Vector3d(6,0,0));
-  bezCurve.push_back(Eigen::Vector3d(6,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezCurve.push_back(Eigen::Vector3d(6,0,-4));
+  bezCurve.push_back(Eigen::Vector3d(4,4,0));
+  bezCurve.push_back(Eigen::Vector3d(4,0,0));
   bezPath.push_back(bezCurve);
   bezCurve.clear();
 
-  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezCurve.push_back(Eigen::Vector3d(4,0,0));
+  bezCurve.push_back(Eigen::Vector3d(4,-4,0));
+  bezCurve.push_back(Eigen::Vector3d(-6,0,4));
+  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
+  bezPath.push_back(bezCurve);
+  bezCurve.clear();
+
+  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
+  bezCurve.push_back(Eigen::Vector3d(-6,0,-4));
+  bezCurve.push_back(Eigen::Vector3d(0,4,4));
   bezCurve.push_back(Eigen::Vector3d(0,4,0));
-  bezCurve.push_back(Eigen::Vector3d(-6,4,0));
-  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
-  bezPath.push_back(bezCurve);
-  bezCurve.clear();
-
-  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
-  bezCurve.push_back(Eigen::Vector3d(-6,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,0,0));
   bezPath.push_back(bezCurve);
   bezCurve.clear();
 
@@ -209,11 +209,11 @@ void initKinBodies() {
   // 4 Links, 3 Joint Arm
   Link* tip = new Link(2,0.5);
   links.push_back(tip);
-  Joint* joint1 = new Joint(tip, HINGE);
+  Joint* joint1 = new Joint(tip, BALL);
   joints.push_back(joint1);
   Link* midTip = new Link(2,0.5,joint1);
   links.push_back(midTip);
-  Joint* joint2 = new Joint(midTip, HINGE);
+  Joint* joint2 = new Joint(midTip, BALL);
   joints.push_back(joint2);
   Link* baseMid = new Link(3, 0.5, joint2);
   links.push_back(baseMid);
@@ -232,6 +232,7 @@ void initScene(){
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
+  // glEnable(GL_POLYGON_SMOOTH);
   glDepthFunc(GL_LEQUAL);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
@@ -300,7 +301,7 @@ void drawPath() {
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, path_spec);
 
   // Draw whole path
-  glBegin(GL_LINE_STRIP);
+  glBegin(GL_LINE_LOOP);
     for (int i=0; i<pointPath.size(); i++) {
       glVertex3f(pointPath[i][0],pointPath[i][1],pointPath[i][2]);
     }
