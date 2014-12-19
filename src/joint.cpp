@@ -121,6 +121,8 @@ void Joint::draw() {
     }
       break;
     case SLIDER: {
+
+      // currTheta;
       // Draw Slider Here (Cylinder)
     }
       break;

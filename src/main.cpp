@@ -27,6 +27,10 @@
 #include "link.h"
 #include "viewport.h"
 
+#define OSCPKT_OSTREAM_OUTPUT
+#include "oscpkt.hpp"
+#include "udp.hpp"
+#define PORT_NUM 7403
 
 #define PI 3.14159265  // Should be used from mathlib
 //#define SPACEBAR ' '
@@ -36,6 +40,8 @@
 // #define INIT_WINDOW_WIDTH 800.0
 // #define INIT_WINDOW_HEIGHT 800.0
 
+#define USE_UDP true
+
 using namespace stl;
 
 //****************************************************
@@ -43,6 +49,8 @@ using namespace stl;
 //****************************************************
 Viewport  viewport;
 std::vector<KinematicBody*> kinBodies;
+
+oscpkt::UdpSocket sock; 
 
 float target_amb[3] = {0.0f, 0.5f, 0.0f};
 float target_diff[3] = {0.0f, 1.0f, 0.0f};
@@ -211,7 +219,7 @@ void initKinBodies() {
   links.push_back(tip);
   Joint* joint1 = new Joint(tip, BALL);
   joints.push_back(joint1);
-  Link* midTip = new Link(2,0.5,joint1);
+  Link* midTip = new Link(4,0.5,joint1);
   links.push_back(midTip);
   Joint* joint2 = new Joint(midTip, BALL);
   joints.push_back(joint2);
@@ -219,7 +227,7 @@ void initKinBodies() {
   links.push_back(baseMid);
   Joint* joint3 = new Joint(baseMid, BALL);
   joints.push_back(joint3);
-  Link* base = new Link(3, 0.5, joint3);
+  Link* base = new Link(2, 0.5, joint3);
   links.push_back(base);
 
   KinematicBody* linksAndJoints = new KinematicBody(links,joints,base,tip);
@@ -227,17 +235,27 @@ void initKinBodies() {
 
 }
 
+void initUDP() {
+  sock.bindTo(PORT_NUM);
+  if (!sock.isOk()) {
+    std::cerr << "Error opening port " << PORT_NUM << ": " << sock.errorMessage() << "\n";
+  } else {
+    std::cout << "Server started, will listen to packets on port " << PORT_NUM << std::endl;
+  }
+}
+
 void initScene(){
 
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
-  // glEnable(GL_POLYGON_SMOOTH);
+  glEnable(GL_POLYGON_SMOOTH);
   glDepthFunc(GL_LEQUAL);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
   initKinBodies();
   initPath();
+  initUDP();
 
 //   GLuint depthTexture;
 //   glGenTextures(1, &depthTexture);
@@ -283,22 +301,60 @@ void initScene(){
 //   }
 // }
 
+void checkUDP(Eigen::Vector3d& target) {
+  static Eigen::Vector3d currentPos(0,0,0);
+  oscpkt::PacketReader pr;
+  oscpkt::PacketWriter pw;
+  if (sock.isOk()) {
+    if (sock.receiveNextPacket(10 /* timeout, in ms */)) {
+      pr.init(sock.packetData(), sock.packetSize());
+      oscpkt::Message *msg;
+      if (pr.isOk() && (msg = pr.popMessage()) != 0) {
+        float farg;
+        int iarg;
+        oscpkt::Message::ArgReader args(*msg);
+        
+        std::cout << "[";
+        args.popInt32(iarg);
+        args.popFloat(farg);
+        currentPos[0] = farg*4;
+        std::cout << farg*4 <<", ";
+        args.popFloat(farg);
+        currentPos[1] = farg*4;
+        std::cout << farg*4 <<", ";
+        args.popFloat(farg);
+        currentPos[2] = farg*4;
+        std::cout << farg*4;
+        std::cout << "]" << std::endl;
+
+
+      } else {
+        std::cout << "PacketReader failed!" << std::endl;
+      }
+    }
+  } else {
+    std::cout << "Socket not OK!" << std::endl;
+  }
+  target = currentPos;
+}
+
 void drawPath() {
-  // Apply path transform
-  glTranslatef(trans[PATH][0], trans[PATH][1], trans[PATH][2]);
-  glRotatef(rot[PATH][0],1.0,0.0,0.0);
-  glRotatef(rot[PATH][1],0.0,1.0,0.0);
-  glRotatef(rot[PATH][2],0.0,0.0,1.0);
+  if (!USE_UDP) {
+    // Apply path transform
+    glTranslatef(trans[PATH][0], trans[PATH][1], trans[PATH][2]);
+    glRotatef(rot[PATH][0],1.0,0.0,0.0);
+    glRotatef(rot[PATH][1],0.0,1.0,0.0);
+    glRotatef(rot[PATH][2],0.0,0.0,1.0);
 
-  double param = 0.01;
-  int num_steps = (int)(1/param)+1;
-  Eigen::Vector3d point;
+    double param = 0.01;
+    int num_steps = (int)(1/param)+1;
+    Eigen::Vector3d point;
 
-  glLineWidth(4);
+    glLineWidth(4);
 
-  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, path_amb);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, path_diff);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, path_spec);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, path_amb);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, path_diff);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, path_spec);
 
   // Draw whole path
   glBegin(GL_LINE_LOOP);
@@ -307,18 +363,16 @@ void drawPath() {
     }
   glEnd();
 
-  // Undo path transform
-  glRotatef(-rot[PATH][2],0.0,0.0,1.0);
-  glRotatef(-rot[PATH][1],0.0,1.0,0.0);
-  glRotatef(-rot[PATH][0],1.0,0.0,0.0);
-  glTranslatef(-trans[PATH][0], -trans[PATH][1], -trans[PATH][2]);
+    // Undo path transform
+    glRotatef(-rot[PATH][2],0.0,0.0,1.0);
+    glRotatef(-rot[PATH][1],0.0,1.0,0.0);
+    glRotatef(-rot[PATH][0],1.0,0.0,0.0);
+    glTranslatef(-trans[PATH][0], -trans[PATH][1], -trans[PATH][2]);
+  }
 }
 
-void drawKinBodies() {
+void drawKinBodies(Eigen::Vector3d& target) {
   std::vector<KinematicBody*>::iterator KBiter;
-
-  Eigen::Vector3d target = currPathTransform*pointPath[currPathPoint];
-
 
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, target_amb);
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, target_diff);
@@ -383,12 +437,23 @@ void myDisplay() {
 
   // Code to draw objects
 
+  Eigen::Vector3d target(0,0,0);
+
+  if (USE_UDP) {
+    checkUDP(target);
+    target = currPathTransform*target;
+  } else {
+    target = currPathTransform*pointPath[currPathPoint];
+  }
+
+
+
   // Draw reflection
   glPushMatrix();
     glScalef(1, 1, -1);
     //   setLightPositions();
     drawPath();
-    drawKinBodies();
+    drawKinBodies(target);
   glPopMatrix();
 
   // Draw floor
@@ -400,7 +465,7 @@ void myDisplay() {
 
   // Draw objects
   drawPath();
-  drawKinBodies();
+  drawKinBodies(target);
 
 
   // Other glut calls
@@ -440,6 +505,12 @@ void myKeyboard(unsigned char key, int x, int y) {
   }
   if (key == '-') {
     trans[currFrame][2]-=0.1;
+  }
+  if (key == '[') {
+    rot[currFrame][2]-=2;
+  }
+  if (key == ']') {
+    rot[currFrame][2]+=2;
   }
   if (key == SPACEBAR) {
     currFrame = (Frame)((currFrame+1)%NUM_FRAMES);

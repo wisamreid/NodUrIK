@@ -2,7 +2,7 @@
 
 using namespace stl;
 
-#define MAX_ITERATIONS 15
+#define MAX_ITERATIONS 10
 #define EPSILON 1e-3
 #define LAMBDA 200
 
