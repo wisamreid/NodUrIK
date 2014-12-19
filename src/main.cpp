@@ -95,13 +95,13 @@ void bezCurveInterp(std::vector<Eigen::Vector3d>& curve, double u, Eigen::Vector
 
 void updatePathTransform() {
   // Apply path transform
-  glLoadIdentity(); 
+  glLoadIdentity();
   glTranslatef(trans[PATH][0], trans[PATH][1], trans[PATH][2]);
   glRotatef(rot[PATH][0],1.0,0.0,0.0);
   glRotatef(rot[PATH][1],0.0,1.0,0.0);
   glRotatef(rot[PATH][2],0.0,0.0,1.0);
 
-  GLfloat matrix[16]; 
+  GLfloat matrix[16];
   glGetFloatv(GL_MODELVIEW_MATRIX, matrix);
   Eigen::Matrix4d temp;
   temp << matrix[0], matrix[4], matrix[8],  matrix[12],
@@ -390,16 +390,34 @@ void drawKinBodies(Eigen::Vector3d& target) {
 }
 
 void drawFloor() {
-  glColor4f(0.7, 0.0, 0.0, 0.40);
-  
+
+  float length = 20.0;
+  float width = 20.0;
+  float stepSize = 2;
+  int numStepsX = (int)length/stepSize;
+  int numStepsY = (int)width/stepSize;
+
+
+  glTranslatef(-length/2, -width/2, 0);
   glDisable(GL_LIGHTING);
   glBegin(GL_QUADS);
-    glVertex3f(-10.0, 12.0, 0.0);
-    glVertex3f(12.0, 12.0, 0.0);
-    glVertex3f(12.0, -10.0, 0.0);
-    glVertex3f(-10.0, -10.0, 0.0);
+  for( int x = 0; stepSize*x < length; x++){
+      for( int y = 0; stepSize*y < width; y++){
+          if ( (x+y)%2 == 0){
+            glColor4f(1.0, 1.0, 1.0, 0.40);
+          }else{
+            glColor4f(0.0, 0.0, 0.0, 0.40);
+          }
+          glVertex3f(stepSize*x, stepSize*y, 0.0);
+          glVertex3f(stepSize*(x+1), stepSize*y, 0.0);
+          glVertex3f(stepSize*(x+1), stepSize*(y+1), 0.0);
+          glVertex3f(stepSize*x, stepSize*(y+1), 0.0);
+
+      }
+  }
   glEnd();
   glEnable(GL_LIGHTING);
+  glTranslatef(length/2, width/2, 0);
 }
 
 void myDisplay() {
