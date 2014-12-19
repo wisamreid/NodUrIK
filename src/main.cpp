@@ -115,31 +115,31 @@ void initPath(){
   std::vector< std::vector<Eigen::Vector3d> > bezPath;
   std::vector<Eigen::Vector3d> bezCurve;
 
-  bezCurve.push_back(Eigen::Vector3d(0,0,0));
   bezCurve.push_back(Eigen::Vector3d(0,4,0));
-  bezCurve.push_back(Eigen::Vector3d(6,4,0));
+  bezCurve.push_back(Eigen::Vector3d(0,4,-4));
+  bezCurve.push_back(Eigen::Vector3d(6,0,4));
   bezCurve.push_back(Eigen::Vector3d(6,0,0));
   bezPath.push_back(bezCurve);
   bezCurve.clear();
 
   bezCurve.push_back(Eigen::Vector3d(6,0,0));
-  bezCurve.push_back(Eigen::Vector3d(6,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezCurve.push_back(Eigen::Vector3d(6,0,-4));
+  bezCurve.push_back(Eigen::Vector3d(4,4,0));
+  bezCurve.push_back(Eigen::Vector3d(4,0,0));
   bezPath.push_back(bezCurve);
   bezCurve.clear();
 
-  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezCurve.push_back(Eigen::Vector3d(4,0,0));
+  bezCurve.push_back(Eigen::Vector3d(4,-4,0));
+  bezCurve.push_back(Eigen::Vector3d(-6,0,4));
+  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
+  bezPath.push_back(bezCurve);
+  bezCurve.clear();
+
+  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
+  bezCurve.push_back(Eigen::Vector3d(-6,0,-4));
+  bezCurve.push_back(Eigen::Vector3d(0,4,4));
   bezCurve.push_back(Eigen::Vector3d(0,4,0));
-  bezCurve.push_back(Eigen::Vector3d(-6,4,0));
-  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
-  bezPath.push_back(bezCurve);
-  bezCurve.clear();
-
-  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
-  bezCurve.push_back(Eigen::Vector3d(-6,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,0,0));
   bezPath.push_back(bezCurve);
   bezCurve.clear();
 
@@ -356,12 +356,12 @@ void drawPath() {
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, path_diff);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, path_spec);
 
-    // Draw whole path
-    glBegin(GL_LINE_STRIP);
-      for (int i=0; i<pointPath.size(); i++) {
-        glVertex3f(pointPath[i][0],pointPath[i][1],pointPath[i][2]);
-      }
-    glEnd();
+  // Draw whole path
+  glBegin(GL_LINE_LOOP);
+    for (int i=0; i<pointPath.size(); i++) {
+      glVertex3f(pointPath[i][0],pointPath[i][1],pointPath[i][2]);
+    }
+  glEnd();
 
     // Undo path transform
     glRotatef(-rot[PATH][2],0.0,0.0,1.0);
