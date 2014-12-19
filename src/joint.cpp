@@ -33,6 +33,13 @@ using namespace stl;
 #define SLIDR_UPPER 1.0
 #define SLIDR_LOWER 0.0
 
+#define NUM_SLICES 20
+#define NUM_STACKS 10
+
+float joint_amb[3] = {0.0f, 0.0f, 0.7f};
+float joint_diff[3] = {0.0f, 0.0f, 0.7f};
+float joint_spec[3] = {0.0f, 0.0f, 0.5f};
+
 Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double theta3, double size_) : childLink(child_), type(type_), size(size_)  {
   switch (type)
   {
@@ -55,13 +62,40 @@ Joint::Joint(Link* child_, JointType type_, double theta1, double theta2, double
 }
 
 void Joint::draw() {
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, joint_amb);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, joint_diff);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, joint_spec);
+
   switch (type)
   {
     case HINGE: {
       glRotatef(90,0,1,0);
       glTranslatef(0,0,-size/2);
+      // Draw cylinder
       GLUquadricObj *hinge = gluNewQuadric();
-      gluCylinder(hinge, size, size, size, 30, 30);
+      gluCylinder(hinge, size*0.8, size*0.8, size, NUM_SLICES, NUM_STACKS);
+
+      GLfloat x,y;
+      // Draw bottom
+      glBegin(GL_TRIANGLE_FAN);
+      glVertex3f(0.0f, 0.0f, 0.0f);
+      for (GLfloat angle = 0.0f; angle<(2.0f*M_PI); angle+=(M_PI/NUM_SLICES*2)) {
+        x = size*0.8*sin(angle);
+        y = size*0.8*cos(angle);
+        glVertex3f(x, y, 0.0f);
+      }
+      glEnd();
+
+      // Draw top
+      glBegin(GL_TRIANGLE_FAN);
+      glVertex3f(0.0f, 0.0f, size);
+      for (GLfloat angle = 0.0f; angle<(2.0f*M_PI); angle+=(M_PI/NUM_SLICES*2)) {
+        x = size*0.8*sin(angle);
+        y = size*0.8*cos(angle);
+        glVertex3f(x, y, size);
+      }
+      glEnd();
+
       glTranslatef(0,0,size/2);
       glRotatef(-90,0,1,0);
 
@@ -70,7 +104,7 @@ void Joint::draw() {
     }
       break;
     case UNIVERSAL: {
-      glutSolidSphere(size, 30, 30);
+      glutSolidSphere(size*0.95, NUM_SLICES, NUM_STACKS);
 
       // Update for childLink
       glRotatef(thetas[0]/M_PI*180,1,0,0);
@@ -78,7 +112,7 @@ void Joint::draw() {
     }
       break;
     case BALL: {
-      glutSolidSphere(size, 30, 30);
+      glutSolidSphere(size*0.95, NUM_SLICES, NUM_STACKS);
 
       // Update for childLink
       glRotatef(thetas[0]/M_PI*180,1,0,0);
