@@ -40,7 +40,7 @@
 // #define INIT_WINDOW_WIDTH 800.0
 // #define INIT_WINDOW_HEIGHT 800.0
 
-#define USE_UDP true
+#define USE_UDP false
 
 using namespace stl;
 
@@ -69,7 +69,7 @@ enum Frame {
 Frame currFrame = GLOBAL;
 bool playAnimation = true;
 
-Eigen::Vector3d trans[NUM_FRAMES] = {Eigen::Vector3d(0,0,-20),Eigen::Vector3d(-3,0,6)};
+Eigen::Vector3d trans[NUM_FRAMES] = {Eigen::Vector3d(0,0,-20),Eigen::Vector3d(-3,0,8)};
 Eigen::Vector3d rot[NUM_FRAMES] = {Eigen::Vector3d(0,0,0),Eigen::Vector3d(0,0,0)};
 
 std::vector<Eigen::Vector3d> pointPath;
@@ -255,7 +255,7 @@ void initScene(){
 
   initKinBodies();
   initPath();
-  initUDP();
+  if (USE_UDP) initUDP();
 
 //   GLuint depthTexture;
 //   glGenTextures(1, &depthTexture);
@@ -306,7 +306,7 @@ void checkUDP(Eigen::Vector3d& target) {
   oscpkt::PacketReader pr;
   oscpkt::PacketWriter pw;
   if (sock.isOk()) {
-    if (sock.receiveNextPacket(10 /* timeout, in ms */)) {
+    if (sock.receiveNextPacket(1 /* timeout, in ms */)) {
       pr.init(sock.packetData(), sock.packetSize());
       oscpkt::Message *msg;
       if (pr.isOk() && (msg = pr.popMessage()) != 0) {
@@ -326,7 +326,6 @@ void checkUDP(Eigen::Vector3d& target) {
         currentPos[2] = farg*4;
         std::cout << farg*4;
         std::cout << "]" << std::endl;
-
 
       } else {
         std::cout << "PacketReader failed!" << std::endl;
@@ -393,8 +392,8 @@ void drawKinBodies(Eigen::Vector3d& target) {
 
 void drawFloor() {
 
-  float length = 20.0;
-  float width = 20.0;
+  float length = 50.0;
+  float width = 50.0;
   float stepSize = 2;
   int numStepsX = (int)length/stepSize;
   int numStepsY = (int)width/stepSize;
