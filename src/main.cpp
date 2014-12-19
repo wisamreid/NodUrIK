@@ -44,6 +44,14 @@ using namespace stl;
 Viewport  viewport;
 std::vector<KinematicBody*> kinBodies;
 
+float target_amb[3] = {0.0f, 0.5f, 0.0f};
+float target_diff[3] = {0.0f, 1.0f, 0.0f};
+float target_spec[3] = {1.0f, 1.0f, 1.0f};
+
+float path_amb[3] = {1.0f, 0.2f, 0.2f};
+float path_diff[3] = {1.0f, 0.2f, 0.2f};
+float path_spec[3] = {0.5f, 0.0f, 0.0f};
+
 enum Frame {
   GLOBAL = 0,
   PATH,
@@ -201,11 +209,11 @@ void initKinBodies() {
   // 4 Links, 3 Joint Arm
   Link* tip = new Link(2,0.5);
   links.push_back(tip);
-  Joint* joint1 = new Joint(tip, BALL);
+  Joint* joint1 = new Joint(tip, HINGE);
   joints.push_back(joint1);
   Link* midTip = new Link(2,0.5,joint1);
   links.push_back(midTip);
-  Joint* joint2 = new Joint(midTip, BALL);
+  Joint* joint2 = new Joint(midTip, HINGE);
   joints.push_back(joint2);
   Link* baseMid = new Link(3, 0.5, joint2);
   links.push_back(baseMid);
@@ -245,7 +253,6 @@ void initScene(){
 
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
-
 }
 
 //****************************************************
@@ -288,6 +295,10 @@ void drawPath() {
 
   glLineWidth(4);
 
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, path_amb);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, path_diff);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, path_spec);
+
   // Draw whole path
   glBegin(GL_LINE_STRIP);
     for (int i=0; i<pointPath.size(); i++) {
@@ -307,6 +318,11 @@ void drawKinBodies() {
 
   Eigen::Vector3d target = currPathTransform*pointPath[currPathPoint];
 
+
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, target_amb);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, target_diff);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, target_spec);
+
   // Draw target
   glTranslatef(target[0], target[1], target[2]);
   glutSolidSphere(0.2, 30, 30);
@@ -320,8 +336,20 @@ void drawKinBodies() {
 
 }
 
-void myDisplay() {
+void drawFloor() {
+  glColor4f(0.7, 0.0, 0.0, 0.40);
+  
+  glDisable(GL_LIGHTING);
+  glBegin(GL_QUADS);
+    glVertex3f(-10.0, 12.0, 0.0);
+    glVertex3f(12.0, 12.0, 0.0);
+    glVertex3f(12.0, -10.0, 0.0);
+    glVertex3f(-10.0, -10.0, 0.0);
+  glEnd();
+  glEnable(GL_LIGHTING);
+}
 
+void myDisplay() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                // clear the color buffer (sets everything to black), and the depth buffer.
 
   glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
@@ -335,11 +363,29 @@ void myDisplay() {
   glRotatef(rot[GLOBAL][2],0.0,0.0,1.0);
 
   // Code to draw objects
+
+  // Draw reflection
+  glPushMatrix();
+    glScalef(1, 1, -1);
+    //   setLightPositions();
+    drawPath();
+    drawKinBodies();
+  glPopMatrix();
+
+  // Draw floor
+  // setLightPositions();
+  glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    drawFloor();
+  glDisable(GL_BLEND);
+
+  // Draw objects
   drawPath();
   drawKinBodies();
 
+
   // Other glut calls
-  glutPostRedisplay();
+  // glutPostRedisplay();
   glFlush();
   glutSwapBuffers();					// swap buffers (we earlier set double buffer)
 }
