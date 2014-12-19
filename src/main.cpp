@@ -260,7 +260,7 @@ void initScene(){
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClearDepth(1.0f);
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_POLYGON_SMOOTH);
+  // glEnable(GL_POLYGON_SMOOTH);
   glDepthFunc(GL_LEQUAL);
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
@@ -394,8 +394,8 @@ void drawKinBodies(Eigen::Vector3d& target) {
 
 void drawFloor() {
 
-  float length = 50.0;
-  float width = 50.0;
+  float length = 70.0;
+  float width = 70.0;
   float stepSize = 2;
   int numStepsX = (int)length/stepSize;
   int numStepsY = (int)width/stepSize;
