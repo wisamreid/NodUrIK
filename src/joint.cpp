@@ -18,12 +18,12 @@
 
 using namespace stl;
 
-#define HINGE_UPPER M_PI/2
-#define HINGE_LOWER -M_PI/2
-#define UNIV1_UPPER M_PI/2
-#define UNIV1_LOWER -M_PI/2
-#define UNIV2_UPPER M_PI/2
-#define UNIV2_LOWER -M_PI/2
+#define HINGE_UPPER M_PI/6
+#define HINGE_LOWER -M_PI/6
+#define UNIV1_UPPER M_PI/4
+#define UNIV1_LOWER -M_PI/4
+#define UNIV2_UPPER M_PI/4
+#define UNIV2_LOWER -M_PI/4
 #define BALL1_UPPER M_PI/2
 #define BALL1_LOWER -M_PI/2
 #define BALL2_UPPER M_PI/2
