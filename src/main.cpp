@@ -219,15 +219,23 @@ void initKinBodies() {
   links.push_back(tip);
   Joint* joint1 = new Joint(tip, BALL);
   joints.push_back(joint1);
+
   Link* midTip = new Link(4,0.5,joint1);
   links.push_back(midTip);
   Joint* joint2 = new Joint(midTip, BALL);
   joints.push_back(joint2);
+
   Link* baseMid = new Link(3, 0.5, joint2);
   links.push_back(baseMid);
   Joint* joint3 = new Joint(baseMid, BALL);
   joints.push_back(joint3);
-  Link* base = new Link(2, 0.5, joint3);
+
+  Link* something = new Link(2, 0.5, joint3);
+  links.push_back(something);
+  Joint* joint4 = new Joint(something, BALL);
+  joints.push_back(joint4);
+
+  Link* base = new Link(1, 0.5, joint4);
   links.push_back(base);
 
   KinematicBody* linksAndJoints = new KinematicBody(links,joints,base,tip);
@@ -394,8 +402,8 @@ void drawKinBodies(Eigen::Vector3d& target) {
 
 void drawFloor() {
 
-  float length = 70.0;
-  float width = 70.0;
+  float length = 100.0;
+  float width = 100.0;
   float stepSize = 2;
   int numStepsX = (int)length/stepSize;
   int numStepsY = (int)width/stepSize;
