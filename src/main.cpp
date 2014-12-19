@@ -339,34 +339,36 @@ void checkUDP(Eigen::Vector3d& target) {
 }
 
 void drawPath() {
-  // Apply path transform
-  glTranslatef(trans[PATH][0], trans[PATH][1], trans[PATH][2]);
-  glRotatef(rot[PATH][0],1.0,0.0,0.0);
-  glRotatef(rot[PATH][1],0.0,1.0,0.0);
-  glRotatef(rot[PATH][2],0.0,0.0,1.0);
+  if (!USE_UDP) {
+    // Apply path transform
+    glTranslatef(trans[PATH][0], trans[PATH][1], trans[PATH][2]);
+    glRotatef(rot[PATH][0],1.0,0.0,0.0);
+    glRotatef(rot[PATH][1],0.0,1.0,0.0);
+    glRotatef(rot[PATH][2],0.0,0.0,1.0);
 
-  double param = 0.01;
-  int num_steps = (int)(1/param)+1;
-  Eigen::Vector3d point;
+    double param = 0.01;
+    int num_steps = (int)(1/param)+1;
+    Eigen::Vector3d point;
 
-  glLineWidth(4);
+    glLineWidth(4);
 
-  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, path_amb);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, path_diff);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, path_spec);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, path_amb);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, path_diff);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, path_spec);
 
-  // Draw whole path
-  glBegin(GL_LINE_STRIP);
-    for (int i=0; i<pointPath.size(); i++) {
-      glVertex3f(pointPath[i][0],pointPath[i][1],pointPath[i][2]);
-    }
-  glEnd();
+    // Draw whole path
+    glBegin(GL_LINE_STRIP);
+      for (int i=0; i<pointPath.size(); i++) {
+        glVertex3f(pointPath[i][0],pointPath[i][1],pointPath[i][2]);
+      }
+    glEnd();
 
-  // Undo path transform
-  glRotatef(-rot[PATH][2],0.0,0.0,1.0);
-  glRotatef(-rot[PATH][1],0.0,1.0,0.0);
-  glRotatef(-rot[PATH][0],1.0,0.0,0.0);
-  glTranslatef(-trans[PATH][0], -trans[PATH][1], -trans[PATH][2]);
+    // Undo path transform
+    glRotatef(-rot[PATH][2],0.0,0.0,1.0);
+    glRotatef(-rot[PATH][1],0.0,1.0,0.0);
+    glRotatef(-rot[PATH][0],1.0,0.0,0.0);
+    glTranslatef(-trans[PATH][0], -trans[PATH][1], -trans[PATH][2]);
+  }
 }
 
 void drawKinBodies(Eigen::Vector3d& target) {
