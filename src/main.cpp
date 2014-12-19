@@ -69,7 +69,7 @@ enum Frame {
 Frame currFrame = GLOBAL;
 bool playAnimation = true;
 
-Eigen::Vector3d trans[NUM_FRAMES] = {Eigen::Vector3d(0,0,-20),Eigen::Vector3d(-3,0,8)};
+Eigen::Vector3d trans[NUM_FRAMES] = {Eigen::Vector3d(0,0,-30),Eigen::Vector3d(-2,-3,5)};
 Eigen::Vector3d rot[NUM_FRAMES] = {Eigen::Vector3d(0,0,0),Eigen::Vector3d(0,0,0)};
 
 std::vector<Eigen::Vector3d> pointPath;
@@ -115,33 +115,111 @@ void initPath(){
   std::vector< std::vector<Eigen::Vector3d> > bezPath;
   std::vector<Eigen::Vector3d> bezCurve;
 
-  bezCurve.push_back(Eigen::Vector3d(0,4,0));
-  bezCurve.push_back(Eigen::Vector3d(0,4,-4));
-  bezCurve.push_back(Eigen::Vector3d(6,0,4));
-  bezCurve.push_back(Eigen::Vector3d(6,0,0));
+  // Sexy curve!
+  // bezCurve.push_back(Eigen::Vector3d(0,0,-2));
+  // bezCurve.push_back(Eigen::Vector3d(0,-8,-2));
+  // bezCurve.push_back(Eigen::Vector3d(10,0,8));
+  // bezCurve.push_back(Eigen::Vector3d(10,0,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+  
+  // bezCurve.push_back(Eigen::Vector3d(10,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(10,0,-8));
+  // bezCurve.push_back(Eigen::Vector3d(0,8,2));
+  // bezCurve.push_back(Eigen::Vector3d(0,0,2));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+  
+  // bezCurve.push_back(Eigen::Vector3d(0,0,2));
+  // bezCurve.push_back(Eigen::Vector3d(0,-8,2));
+  // bezCurve.push_back(Eigen::Vector3d(-10,0,8));
+  // bezCurve.push_back(Eigen::Vector3d(-10,0,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+  
+  // bezCurve.push_back(Eigen::Vector3d(-10,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(-10,0,-8));
+  // bezCurve.push_back(Eigen::Vector3d(0,8,-2));
+  // bezCurve.push_back(Eigen::Vector3d(0,0,-2));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+
+  // Cool start shape!!!
+  // bezCurve.push_back(Eigen::Vector3d(0,10,0));
+  // bezCurve.push_back(Eigen::Vector3d(0,0,-0));
+  // bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(10,0,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+  // bezCurve.push_back(Eigen::Vector3d(10,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(-0,0,-0));
+  // bezCurve.push_back(Eigen::Vector3d(0,-0,0));
+  // bezCurve.push_back(Eigen::Vector3d(0,-10,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+  // bezCurve.push_back(Eigen::Vector3d(0,-10,0));
+  // bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(-0,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(-10,0,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+  // bezCurve.push_back(Eigen::Vector3d(-10,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(0,0,-0));
+  // bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(0,10,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+
+  // Squarish path!
+  // bezCurve.push_back(Eigen::Vector3d(0,10,0));
+  // bezCurve.push_back(Eigen::Vector3d(10,10,0));
+  // bezCurve.push_back(Eigen::Vector3d(10,10,0));
+  // bezCurve.push_back(Eigen::Vector3d(10,0,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+  // bezCurve.push_back(Eigen::Vector3d(10,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(10,-10,-0));
+  // bezCurve.push_back(Eigen::Vector3d(10,-10,0));
+  // bezCurve.push_back(Eigen::Vector3d(0,-10,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+  // bezCurve.push_back(Eigen::Vector3d(0,-10,0));
+  // bezCurve.push_back(Eigen::Vector3d(-10,-10,0));
+  // bezCurve.push_back(Eigen::Vector3d(-10,-10,0));
+  // bezCurve.push_back(Eigen::Vector3d(-10,0,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+  // bezCurve.push_back(Eigen::Vector3d(-10,0,0));
+  // bezCurve.push_back(Eigen::Vector3d(-10,10,-0));
+  // bezCurve.push_back(Eigen::Vector3d(-10,10,0));
+  // bezCurve.push_back(Eigen::Vector3d(0,10,0));
+  // bezPath.push_back(bezCurve);
+  // bezCurve.clear();
+
+
+  // Simple Elipse!
+  bezCurve.push_back(Eigen::Vector3d(0,0,0));
+  bezCurve.push_back(Eigen::Vector3d(10,0,0));
+  bezCurve.push_back(Eigen::Vector3d(10,20,0));
+  bezCurve.push_back(Eigen::Vector3d(0,20,0));
   bezPath.push_back(bezCurve);
   bezCurve.clear();
 
-  bezCurve.push_back(Eigen::Vector3d(6,0,0));
-  bezCurve.push_back(Eigen::Vector3d(6,0,-4));
-  bezCurve.push_back(Eigen::Vector3d(4,4,0));
-  bezCurve.push_back(Eigen::Vector3d(4,0,0));
+  bezCurve.push_back(Eigen::Vector3d(0,20,0));
+  bezCurve.push_back(Eigen::Vector3d(-10,20,-0));
+  bezCurve.push_back(Eigen::Vector3d(-10,0,0));
+  bezCurve.push_back(Eigen::Vector3d(0,0,0));
   bezPath.push_back(bezCurve);
   bezCurve.clear();
 
-  bezCurve.push_back(Eigen::Vector3d(4,0,0));
-  bezCurve.push_back(Eigen::Vector3d(4,-4,0));
-  bezCurve.push_back(Eigen::Vector3d(-6,0,4));
-  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
-  bezPath.push_back(bezCurve);
-  bezCurve.clear();
-
-  bezCurve.push_back(Eigen::Vector3d(-6,0,0));
-  bezCurve.push_back(Eigen::Vector3d(-6,0,-4));
-  bezCurve.push_back(Eigen::Vector3d(0,4,4));
-  bezCurve.push_back(Eigen::Vector3d(0,4,0));
-  bezPath.push_back(bezCurve);
-  bezCurve.clear();
 
   double param = 0.01;
   int num_steps = (int)(1/param)+1;
@@ -214,28 +292,50 @@ void initKinBodies() {
   // KinematicBody* linksAndJoints = new KinematicBody(links,joints,base,tip);
   // kinBodies.push_back(linksAndJoints);
 
+  // 5 Links, 4 Joint Arm
+  // Link* tip = new Link(2,0.5);
+  // links.push_back(tip);
+  // Joint* joint1 = new Joint(tip, BALL);
+  // joints.push_back(joint1);
+
+  // Link* midTip = new Link(4,0.5,joint1);
+  // links.push_back(midTip);
+  // Joint* joint2 = new Joint(midTip, BALL);
+  // joints.push_back(joint2);
+
+  // Link* baseMid = new Link(3, 0.5, joint2);
+  // links.push_back(baseMid);
+  // Joint* joint3 = new Joint(baseMid, BALL);
+  // joints.push_back(joint3);
+
+  // Link* something = new Link(2, 0.5, joint3);
+  // links.push_back(something);
+  // Joint* joint4 = new Joint(something, BALL);
+  // joints.push_back(joint4);
+
+  // Link* base = new Link(1, 0.5, joint4);
+  // links.push_back(base);
+
+  // KinematicBody* linksAndJoints = new KinematicBody(links,joints,base,tip);
+  // kinBodies.push_back(linksAndJoints);
+
   // 4 Links, 3 Joint Arm
   Link* tip = new Link(2,0.5);
   links.push_back(tip);
-  Joint* joint1 = new Joint(tip, BALL);
+  Joint* joint1 = new Joint(tip, HINGE);
   joints.push_back(joint1);
 
   Link* midTip = new Link(4,0.5,joint1);
   links.push_back(midTip);
-  Joint* joint2 = new Joint(midTip, BALL);
+  Joint* joint2 = new Joint(midTip, UNIVERSAL);
   joints.push_back(joint2);
 
   Link* baseMid = new Link(3, 0.5, joint2);
   links.push_back(baseMid);
-  Joint* joint3 = new Joint(baseMid, BALL);
+  Joint* joint3 = new Joint(baseMid, UNIVERSAL);
   joints.push_back(joint3);
 
-  Link* something = new Link(2, 0.5, joint3);
-  links.push_back(something);
-  Joint* joint4 = new Joint(something, BALL);
-  joints.push_back(joint4);
-
-  Link* base = new Link(1, 0.5, joint4);
+  Link* base = new Link(1, 0.5, joint3);
   links.push_back(base);
 
   KinematicBody* linksAndJoints = new KinematicBody(links,joints,base,tip);
