@@ -21,6 +21,7 @@ void Link::draw() {
 
   GLfloat x,y;
   // Draw bottom
+  // gluDisk(GLUquadric* quad,0,size,NUM_SLICES,NUM_STACKS,1);
   glBegin(GL_TRIANGLE_FAN);
   glVertex3f(0.0f, 0.0f, 0.0f);
   for (GLfloat angle = 0.0f; angle<(2.0f*M_PI)+(M_PI/NUM_SLICES*2); angle+=(M_PI/NUM_SLICES*2)) {
