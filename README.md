@@ -6,7 +6,7 @@ Assignment 3: Bezier Subdivision
 ##########################################
 
 Projects URL: http://www-inst.cs.berkeley.edu/~cs184-ds/Projects/projects.html
-[[/videos/video1.m4v]]
+
 Authors:
 ----------
 Wisam Reid (cs184-ds)
