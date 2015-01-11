@@ -18,11 +18,6 @@ Mac OSX
 
 Tested on Mac OSX 10.9.5 and Mac OSX 10.6.8 on personal computer(s).
 
-Submission:
--------------
-Code submitted by Eddie Groshev (cs184-en).
-README by Wisam Reid (cs184-ds)
-
 BUILD:
 --------
 Run 'make' to build
